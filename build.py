@@ -16,6 +16,7 @@ VERSION = "0.4.0"
 PROJECT_NAME = "Cyberchess"
 BUILD_DIR = "build"
 DIST_DIR = "dist"
+HASH_CHUNK_SIZE = 4096  # Size of chunks when reading files for hashing
 
 
 def clean_build_dirs():
@@ -214,7 +215,7 @@ def generate_checksums(files):
             sha256 = hashlib.sha256()
             
             with open(file_path, 'rb') as binary_file:
-                for chunk in iter(lambda: binary_file.read(4096), b''):
+                for chunk in iter(lambda: binary_file.read(HASH_CHUNK_SIZE), b''):
                     sha256.update(chunk)
             
             checksum = sha256.hexdigest()

@@ -103,11 +103,11 @@ class PuzzleTrainer:
                 description="White to move and mate in 2"
             ),
             ChessPuzzle(
-                fen="r5k1/ppp2ppp/8/8/8/8/PPP2PPP/4R1K1 w - - 0 1",
-                solution=["e1e8", "a8e8", "e8e8"],  # Re8+ Rxe8 Rxe8#
-                theme="Mate in 2",
+                fen="r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+                solution=["f3e5", "c6e5", "d1h5"],  # Nxe5 Nxe5 Qh5+ wins material
+                theme="Fork",
                 difficulty="Medium",
-                description="White to move and mate in 2"
+                description="White to move - find the winning combination"
             ),
         ]
     
@@ -223,7 +223,7 @@ class PuzzleTrainer:
             info = engine.analyse(board, chess.engine.Limit(depth=15))
             engine.quit()
             
-            if 'pv' in info and len(info['pv']) > 0:
+            if 'pv' in info and info['pv']:
                 best_move = info['pv'][0]
                 print(f"💡 Hint: Consider the move {board.san(best_move)} ({best_move.uci()})")
             else:

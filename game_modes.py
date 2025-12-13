@@ -331,6 +331,9 @@ class PlayerVsPlayerGame(ChessGame):
 class PlayerVsComputerGame(ChessGame):
     """Player vs Computer chess game."""
     
+    # AI thinking time strategy: use this fraction of remaining time per move
+    AI_TIME_FRACTION = 20
+    
     def __init__(self, stockfish_path: str, player_color: chess.Color = chess.WHITE, skill_level: int = 10):
         super().__init__()
         self.stockfish_path = stockfish_path
@@ -382,7 +385,7 @@ class PlayerVsComputerGame(ChessGame):
         
         # Use time limit if time controls are enabled
         if self.time_controls is not None:
-            time_limit = min(1.0, self.get_remaining_time(self.board.turn) / 20)  # Use 1/20th of remaining time
+            time_limit = min(1.0, self.get_remaining_time(self.board.turn) / self.AI_TIME_FRACTION)
             result = self.engine.play(self.board, chess.engine.Limit(time=time_limit))
         else:
             result = self.engine.play(self.board, chess.engine.Limit(time=1.0))
