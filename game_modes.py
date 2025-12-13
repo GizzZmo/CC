@@ -53,12 +53,13 @@ class ChessGame:
             black_move = self.move_history[i + 1] if i + 1 < len(self.move_history) else ""
             print(f"{move_num}. {white_move:8} {black_move}")
             
-    def make_move(self, move: chess.Move) -> None:
-        """Make a move and record it in history."""
+    def make_move(self, move: chess.Move) -> str:
+        """Make a move and record it in history. Returns the SAN notation."""
         # Convert to SAN (Standard Algebraic Notation) before making the move
         san_move = self.board.san(move)
         self.board.push(move)
         self.move_history.append(san_move)
+        return san_move
         
     def is_game_over(self) -> bool:
         """Check if the game is over."""
@@ -187,8 +188,7 @@ class PlayerVsComputerGame(ChessGame):
                 else:
                     move = self.get_computer_move()
                     
-                san_move = self.board.san(move)
-                self.make_move(move)
+                san_move = self.make_move(move)
                 print(f"Move played: {san_move} ({move.uci()})")
                 
             # Game over
@@ -298,8 +298,7 @@ class AIvsAIGame(ChessGame):
                     move = self.get_gemini_move()
                     player = "Gemini"
                     
-                san_move = self.board.san(move)
-                self.make_move(move)
+                san_move = self.make_move(move)
                 print(f"{player} played: {san_move} ({move.uci()})")
                 
             # Game over
