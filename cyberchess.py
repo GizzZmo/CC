@@ -18,17 +18,20 @@ GOOGLE_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash') # Using Flash for speed
 
-def get_gemini_move(board, retries=3):
+def get_gemini_move(board, gemini_color, retries=3):
     """
     Sends the board state to Gemini and asks for a move.
     Includes a retry loop for illegal moves.
     """
     legal_moves = [move.uci() for move in board.legal_moves]
     
+    # Determine Gemini's color dynamically
+    color = "White" if gemini_color == chess.WHITE else "Black"
+    
     # We provide the FEN (Board State) and the list of legal moves to help Gemini
     # ground its reasoning and avoid hallucinations.
     prompt = f"""
-    You are playing a game of Chess against Stockfish. You are playing Black.
+    You are playing a game of Chess against Stockfish. You are playing {color}.
     
     Current Board Position (FEN): {board.fen()}
     
@@ -96,7 +99,7 @@ def play_game():
         else:
             # --- GEMINI TURN ---
             print("Gemini is thinking...")
-            move = get_gemini_move(board)
+            move = get_gemini_move(board, gemini_color)
             board.push(move)
             print(f"Gemini played: {move.uci()}")
 
