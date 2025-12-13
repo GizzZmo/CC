@@ -9,7 +9,6 @@ import chess.pgn
 import google.generativeai as genai
 import random
 import datetime
-from typing import Optional, Callable
 
 
 class ChessGame:
@@ -242,8 +241,12 @@ class AIvsAIGame(ChessGame):
         """Get a move from Gemini AI."""
         legal_moves = [move.uci() for move in self.board.legal_moves]
         
+        # Determine Gemini's color dynamically
+        color = "White" if self.board.turn == chess.WHITE else "Black"
+        opponent_color = "Black" if self.board.turn == chess.WHITE else "White"
+        
         prompt = f"""
-        You are playing a game of Chess against Stockfish. You are playing Black.
+        You are playing a game of Chess against Stockfish. You are playing {color}.
         
         Current Board Position (FEN): {self.board.fen()}
         
