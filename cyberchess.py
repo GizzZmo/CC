@@ -25,7 +25,7 @@ def get_gemini_move(board, gemini_color, retries=3):
     """
     legal_moves = [move.uci() for move in board.legal_moves]
     
-    # Determine Gemini's color dynamically
+    # Convert Gemini's assigned color to string for the prompt
     color = "White" if gemini_color == chess.WHITE else "Black"
     
     # We provide the FEN (Board State) and the list of legal moves to help Gemini
