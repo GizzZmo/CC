@@ -34,8 +34,11 @@ env/
 *.swo
 *~
 
-# Training data
+# Game data and training files
 training_data.pgn
+pvp_games.pgn
+pvc_games.pgn
+ai_vs_ai_games.pgn
 
 # Configuration
 config.py
