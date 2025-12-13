@@ -40,7 +40,7 @@ To create an accessible, feature-rich chess platform that serves players of all 
 - **Game Modes**: 
   - ✅ Player vs Player (local)
   - ✅ Player vs Computer (Stockfish)
-  - ✅ AI vs AI (Stockfish vs Gemini)
+  - ✅ AI vs AI (Stockfish vs Gemini) with configurable/randomized color assignment
 - **Game Analysis**: 
   - ✅ Move history tracking (UCI and SAN notation)
   - ✅ Game state display
@@ -155,17 +155,18 @@ This provides a menu with options:
 1. **Player vs Player** - Two humans playing locally
 2. **Player vs Computer** - Play against Stockfish AI
 3. **AI vs AI** - Watch Stockfish play against Gemini AI
+   - Choose color assignment: classic, reversed, or random (recommended for training)
 4. Exit
 
 ### Legacy Mode
 
-To run a single AI vs AI game (legacy mode):
+To run a single AI vs AI game (legacy mode) with randomized colors:
 
 ```bash
 python cyberchess.py
 ```
 
-This runs one game between Stockfish (White) and Gemini AI (Black) and saves it to `training_data.pgn`.
+This runs one game between Stockfish and Gemini AI with randomly assigned colors and saves it to `training_data.pgn`.
 
 ### Feature Demonstration
 
@@ -284,8 +285,8 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 - [x] Multiple game modes with menu launcher
 - [x] Example games and demo assets
 
-### Phase 3: Advanced Features (Planned)
-- [ ] Configurable/randomized AI color assignment in AI vs AI mode
+### Phase 3: Advanced Features (In Progress)
+- [x] Configurable/randomized AI color assignment in AI vs AI mode
 - [ ] Post-game engine analysis with evaluations
 - [ ] Opening book integration
 - [ ] Chess puzzles and training mode
@@ -334,6 +335,6 @@ For support, questions, or feedback:
 
 ---
 
-**Status**: 🎉 Phase 2 Complete - Core Features Implemented
+**Status**: 🚀 Phase 3 In Progress - First Advanced Feature Implemented
 
 *Last Updated: December 2025*

@@ -18,17 +18,20 @@ GOOGLE_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 genai.configure(api_key=GOOGLE_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash') # Using Flash for speed
 
-def get_gemini_move(board, retries=3):
+def get_gemini_move(board, gemini_color, retries=3):
     """
     Sends the board state to Gemini and asks for a move.
     Includes a retry loop for illegal moves.
     """
     legal_moves = [move.uci() for move in board.legal_moves]
     
+    # Convert Gemini's assigned color to string for the prompt
+    color = "White" if gemini_color == chess.WHITE else "Black"
+    
     # We provide the FEN (Board State) and the list of legal moves to help Gemini
     # ground its reasoning and avoid hallucinations.
     prompt = f"""
-    You are playing a game of Chess against Stockfish. You are playing Black.
+    You are playing a game of Chess against Stockfish. You are playing {color}.
     
     Current Board Position (FEN): {board.fen()}
     
@@ -74,14 +77,18 @@ def play_game():
     # Set Stockfish skill level (Lower it initially so Gemini has a chance)
     # Skill level 0 is weak, 20 is Grandmaster. Let's start at 5.
     engine.configure({"Skill Level": 5})
-
-    print("--- CYBERCHESS: Stockfish (White) vs Gemini (Black) ---")
+    
+    # Randomize AI colors for diverse training data
+    stockfish_color = random.choice([chess.WHITE, chess.BLACK])
+    gemini_color = not stockfish_color
+    
+    print(f"--- CYBERCHESS: Stockfish ({'White' if stockfish_color == chess.WHITE else 'Black'}) vs Gemini ({'White' if gemini_color == chess.WHITE else 'Black'}) ---")
     
     while not board.is_game_over():
         print(f"\nMove {board.fullmove_number}")
         print(board)
         
-        if board.turn == chess.WHITE:
+        if board.turn == stockfish_color:
             # --- STOCKFISH TURN ---
             print("Stockfish is thinking...")
             # Limit Stockfish to 0.1 seconds so it plays fast
@@ -92,7 +99,7 @@ def play_game():
         else:
             # --- GEMINI TURN ---
             print("Gemini is thinking...")
-            move = get_gemini_move(board)
+            move = get_gemini_move(board, gemini_color)
             board.push(move)
             print(f"Gemini played: {move.uci()}")
 
@@ -101,17 +108,24 @@ def play_game():
     print(f"Result: {board.result()}")
     
     engine.quit()
-    return board
+    return board, stockfish_color
 
-def save_game_data(board):
+def save_game_data(board, stockfish_color):
     """
     Saves the game to a PGN file. 
     This is the dataset we will use later to FINE TUNE Gemini.
     """
     pgn_game = chess.pgn.Game.from_board(board)
     pgn_game.headers["Event"] = "Cyberchess Dojo"
-    pgn_game.headers["White"] = "Stockfish Level 5"
-    pgn_game.headers["Black"] = "Gemini 1.5 Flash"
+    
+    # Set player names based on actual colors
+    if stockfish_color == chess.WHITE:
+        pgn_game.headers["White"] = "Stockfish Level 5"
+        pgn_game.headers["Black"] = "Gemini 1.5 Flash"
+    else:
+        pgn_game.headers["White"] = "Gemini 1.5 Flash"
+        pgn_game.headers["Black"] = "Stockfish Level 5"
+    
     pgn_game.headers["Date"] = datetime.datetime.now().strftime("%Y.%m.%d")
 
     with open("training_data.pgn", "a") as f:
@@ -120,5 +134,5 @@ def save_game_data(board):
 
 if __name__ == "__main__":
     # In a real app, you would loop this: while True: play_game()
-    finished_board = play_game()
-    save_game_data(finished_board)
+    finished_board, stockfish_color = play_game()
+    save_game_data(finished_board, stockfish_color)

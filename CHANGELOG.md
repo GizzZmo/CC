@@ -5,6 +5,27 @@ All notable changes to the Cyberchess project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2025-12-13
+
+### Added - Phase 3 (First Feature)
+- **Configurable/Randomized AI Color Assignment**
+  - AI vs AI mode now supports choosing which AI plays which color
+  - Three options: Classic (Stockfish White), Reversed (Gemini White), or Random (recommended)
+  - Random color assignment by default for more diverse training data
+  - Updated PGN export to correctly reflect actual player colors
+  - Legacy mode (`cyberchess.py`) now randomizes colors by default
+  
+### Changed
+- `AIvsAIGame.__init__()` now accepts optional `stockfish_color` parameter
+- `play_ai_vs_ai()` in `play.py` now prompts for color assignment preference
+- Updated game display to show which AI is playing which color
+- Updated documentation to reflect new capabilities
+
+### Technical Details
+- Maintains backward compatibility (color defaults to random if not specified)
+- Gemini prompts already supported dynamic color assignment
+- PGN headers now correctly show White and Black players based on actual game setup
+
 ## [0.2.0] - 2025-12-13
 
 ### Added - Phase 2 Implementation
@@ -92,10 +113,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ✅ **Phase 1**: Foundation - Complete
 - ✅ **Phase 2**: Core Features - Complete
-- 🔮 **Phase 3**: Advanced Features - Planned
+- 🚀 **Phase 3**: Advanced Features - In Progress (1/7 features complete)
 - 🔮 **Phase 4**: Polish - Planned
 
 ## Version History
 
-- **v0.2.0** (Current) - Phase 2 Complete: Multiple game modes, interactive launcher, demo assets
+- **v0.3.0** (Current) - Phase 3 Started: Configurable AI color assignment
+- **v0.2.0** - Phase 2 Complete: Multiple game modes, interactive launcher, demo assets
 - **v0.1.0** - Phase 1 Complete: Basic AI vs AI implementation
