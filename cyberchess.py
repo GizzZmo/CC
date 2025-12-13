@@ -2,7 +2,7 @@ import chess
 import chess.engine
 import chess.pgn
 import google.generativeai as genai
-import time
+import random
 import datetime
 
 # --- CONFIGURATION ---
@@ -64,7 +64,6 @@ def get_gemini_move(board, retries=3):
 
     # If Gemini fails 3 times, we make a random move to keep the game going (fallback)
     print(" > Gemini failed to produce a legal move. Making random move.")
-    import random
     return random.choice(list(board.legal_moves))
 
 def play_game():
@@ -78,8 +77,6 @@ def play_game():
 
     print("--- CYBERCHESS: Stockfish (White) vs Gemini (Black) ---")
     
-    game_moves = []
-    
     while not board.is_game_over():
         print(f"\nMove {board.fullmove_number}")
         print(board)
@@ -91,7 +88,6 @@ def play_game():
             result = engine.play(board, chess.engine.Limit(time=0.1))
             board.push(result.move)
             print(f"Stockfish played: {result.move.uci()}")
-            game_moves.append(result.move)
             
         else:
             # --- GEMINI TURN ---
@@ -99,7 +95,6 @@ def play_game():
             move = get_gemini_move(board)
             board.push(move)
             print(f"Gemini played: {move.uci()}")
-            game_moves.append(move)
 
     # --- GAME OVER ---
     print("\n--- GAME OVER ---")
