@@ -285,6 +285,7 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 - [x] Example games and demo assets
 
 ### Phase 3: Advanced Features (Planned)
+- [ ] Configurable/randomized AI color assignment in AI vs AI mode
 - [ ] Post-game engine analysis with evaluations
 - [ ] Opening book integration
 - [ ] Chess puzzles and training mode

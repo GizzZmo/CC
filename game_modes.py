@@ -210,7 +210,13 @@ class PlayerVsComputerGame(ChessGame):
 
 
 class AIvsAIGame(ChessGame):
-    """AI vs AI chess game (Stockfish vs Gemini)."""
+    """
+    AI vs AI chess game (Stockfish vs Gemini).
+    
+    Note: Currently, Stockfish always plays White and Gemini always plays Black.
+    Future enhancement: Make AI color assignment configurable or randomized
+    for more diverse training data.
+    """
     
     def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5):
         super().__init__()
