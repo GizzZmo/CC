@@ -41,6 +41,7 @@ def copy_source_files():
         "game_modes.py",
         "cyberchess.py",
         "demo.py",
+        "demo_advanced.py",
         "opening_book.py",
         "puzzles.py",
         "test_features.py",
