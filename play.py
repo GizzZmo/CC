@@ -125,7 +125,30 @@ def play_ai_vs_ai():
         except ValueError:
             print("❌ Invalid input! Please enter a number.")
     
-    game = AIvsAIGame(STOCKFISH_PATH, GOOGLE_API_KEY, skill_level)
+    # Choose color assignment
+    print("\n🎨 Color Assignment:")
+    print("1. Stockfish plays White, Gemini plays Black (classic)")
+    print("2. Stockfish plays Black, Gemini plays White")
+    print("3. Random color assignment (recommended for diverse training)")
+    
+    while True:
+        color_choice = input("\nChoose option (1-3, default=3): ").strip()
+        if not color_choice or color_choice == '3':
+            stockfish_color = None  # Random
+            print("✨ Colors will be randomly assigned")
+            break
+        elif color_choice == '1':
+            stockfish_color = chess.WHITE
+            print("Stockfish will play White")
+            break
+        elif color_choice == '2':
+            stockfish_color = chess.BLACK
+            print("Stockfish will play Black")
+            break
+        else:
+            print("❌ Invalid choice! Enter 1, 2, or 3.")
+    
+    game = AIvsAIGame(STOCKFISH_PATH, GOOGLE_API_KEY, skill_level, stockfish_color)
     game.play()
 
 

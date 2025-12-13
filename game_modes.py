@@ -213,16 +213,22 @@ class AIvsAIGame(ChessGame):
     """
     AI vs AI chess game (Stockfish vs Gemini).
     
-    Note: Currently, Stockfish always plays White and Gemini always plays Black.
-    Future enhancement: Make AI color assignment configurable or randomized
-    for more diverse training data.
+    Supports configurable or randomized AI color assignment for diverse training data.
     """
     
-    def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5):
+    def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5, stockfish_color: chess.Color = None):
         super().__init__()
         self.stockfish_path = stockfish_path
         self.stockfish_skill = stockfish_skill
         self.engine = None
+        
+        # AI color assignment: randomize if not specified
+        if stockfish_color is None:
+            self.stockfish_color = random.choice([chess.WHITE, chess.BLACK])
+        else:
+            self.stockfish_color = stockfish_color
+        
+        self.gemini_color = not self.stockfish_color
         
         # Setup Gemini
         genai.configure(api_key=google_api_key)
@@ -290,6 +296,9 @@ class AIvsAIGame(ChessGame):
         """Play a full AI vs AI game."""
         print("=" * 50)
         print(f"🤖 AI VS AI MODE: Stockfish (Level {self.stockfish_skill}) vs Gemini")
+        stockfish_color_name = "White" if self.stockfish_color == chess.WHITE else "Black"
+        gemini_color_name = "White" if self.gemini_color == chess.WHITE else "Black"
+        print(f"Stockfish plays {stockfish_color_name}, Gemini plays {gemini_color_name}")
         print("=" * 50)
         
         self.start_engine()
@@ -298,7 +307,7 @@ class AIvsAIGame(ChessGame):
             while not self.is_game_over():
                 self.display_board()
                 
-                if self.board.turn == chess.WHITE:
+                if self.board.turn == self.stockfish_color:
                     print("Stockfish is thinking...")
                     move = self.get_stockfish_move()
                     player = "Stockfish"
@@ -317,9 +326,20 @@ class AIvsAIGame(ChessGame):
             print(f"🏁 GAME OVER - Result: {self.get_result()}")
             print("=" * 50)
             
+            # Set player names based on actual colors
+            stockfish_name = f"Stockfish Level {self.stockfish_skill}"
+            gemini_name = "Gemini 1.5 Flash"
+            
+            if self.stockfish_color == chess.WHITE:
+                white_player = stockfish_name
+                black_player = gemini_name
+            else:
+                white_player = gemini_name
+                black_player = stockfish_name
+            
             self.save_to_pgn("ai_vs_ai_games.pgn", 
-                           f"Stockfish Level {self.stockfish_skill}", 
-                           "Gemini 1.5 Flash",
+                           white_player,
+                           black_player,
                            "Cyberchess AI Training")
                 
         finally:
