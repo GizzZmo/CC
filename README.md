@@ -42,7 +42,7 @@ To create an accessible, feature-rich chess platform that serves players of all 
 - **Game History**: Save and replay previous games
 - **Multiple Board Themes**: Customizable board and piece designs
 - **Time Controls**: Support for various time formats (Blitz, Rapid, Classical)
-- **Rating System**: ELO-based player rating system
+- **Rating System**: Elo-based player rating system
 
 ## Project Structure
 
