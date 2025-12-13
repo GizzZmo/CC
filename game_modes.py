@@ -9,6 +9,7 @@ import chess.pgn
 import google.generativeai as genai
 import random
 import datetime
+from typing import Optional
 
 
 class ChessGame:
@@ -216,7 +217,7 @@ class AIvsAIGame(ChessGame):
     Supports configurable or randomized AI color assignment for diverse training data.
     """
     
-    def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5, stockfish_color: chess.Color = None):
+    def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5, stockfish_color: Optional[chess.Color] = None):
         super().__init__()
         self.stockfish_path = stockfish_path
         self.stockfish_skill = stockfish_skill

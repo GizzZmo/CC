@@ -79,9 +79,6 @@ def play_game():
     stockfish_color = random.choice([chess.WHITE, chess.BLACK])
     gemini_color = not stockfish_color
     
-    stockfish_name = "Stockfish" if stockfish_color == chess.WHITE else "Gemini"
-    gemini_name = "Gemini" if stockfish_color == chess.WHITE else "Stockfish"
-    
     print(f"--- CYBERCHESS: Stockfish ({'White' if stockfish_color == chess.WHITE else 'Black'}) vs Gemini ({'White' if gemini_color == chess.WHITE else 'Black'}) ---")
     
     while not board.is_game_over():
