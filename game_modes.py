@@ -254,9 +254,8 @@ class AIvsAIGame(ChessGame):
         """Get a move from Gemini AI."""
         legal_moves = [move.uci() for move in self.board.legal_moves]
         
-        # Determine Gemini's color dynamically
-        color = "White" if self.board.turn == chess.WHITE else "Black"
-        opponent_color = "Black" if self.board.turn == chess.WHITE else "White"
+        # Use Gemini's assigned color
+        color = "White" if self.gemini_color == chess.WHITE else "Black"
         
         prompt = f"""
         You are playing a game of Chess against Stockfish. You are playing {color}.
