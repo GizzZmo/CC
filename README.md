@@ -16,6 +16,7 @@
 - [Contributing](#contributing)
 - [Architecture](#architecture)
 - [Roadmap](#roadmap)
+- [Changelog](#changelog)
 - [License](#license)
 - [Support](#support)
 - [Acknowledgments](#acknowledgments)
@@ -221,31 +222,31 @@ Automated test suite will be added in future phases.
 
 ### Code Style
 
-Code style guidelines will be established based on the chosen programming language and framework:
-- Follow language-specific best practices
-- Maintain consistent formatting
-- Write clear, self-documenting code
-- Include comprehensive comments for complex logic
-- Write unit tests for all new features
+This project follows Python best practices:
+- **PEP 8**: Python style guide compliance
+- **Docstrings**: All functions and classes documented
+- **Descriptive Names**: Clear, self-documenting code
+- **Modular Design**: Separation of concerns
+- **Consistent Formatting**: Uniform code structure
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed style guidelines.
 
 ## Contributing
 
-Contributions to CC are welcome! Here's how you can help:
+Contributions to CC are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Quick Contributing Guide
 
 1. **Fork the Repository**: Create your own fork of the project
 2. **Create a Feature Branch**: `git checkout -b feature/your-feature-name`
 3. **Make Your Changes**: Implement your feature or bug fix
-4. **Write Tests**: Ensure your changes are covered by tests
-5. **Commit Your Changes**: `git commit -m 'Add some feature'`
-6. **Push to Branch**: `git push origin feature/your-feature-name`
-7. **Open a Pull Request**: Submit your changes for review
+4. **Write Tests**: Ensure your changes are tested (run `python demo.py`)
+5. **Update Documentation**: Keep README.md and CHANGELOG.md current
+6. **Commit Your Changes**: `git commit -m 'Add some feature'`
+7. **Push to Branch**: `git push origin feature/your-feature-name`
+8. **Open a Pull Request**: Submit your changes for review
 
-### Contribution Guidelines
-- Follow the existing code style
-- Write clear commit messages
-- Update documentation as needed
-- Ensure all tests pass before submitting
-- Be respectful and constructive in discussions
+For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Architecture
 
@@ -298,6 +299,21 @@ Contributions to CC are welcome! Here's how you can help:
 - [ ] Mobile responsiveness
 - [ ] Comprehensive automated testing
 - [ ] Documentation improvements
+
+## Changelog
+
+For a detailed history of changes, see [CHANGELOG.md](CHANGELOG.md).
+
+### Recent Changes (v0.2.0 - Phase 2 Complete)
+- ✅ Added Player vs Player game mode
+- ✅ Added Player vs Computer game mode
+- ✅ Added interactive game launcher with menu
+- ✅ Implemented full chess rules (castling, en passant, promotion)
+- ✅ Enhanced game state management (check, checkmate, stalemate, draws)
+- ✅ Added move history tracking (UCI and SAN notation)
+- ✅ Created demo script showcasing all features
+- ✅ Added famous games collection as example assets
+- ✅ Created comprehensive documentation
 
 ## License
 
