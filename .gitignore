@@ -42,3 +42,7 @@ ai_vs_ai_games.pgn
 
 # Configuration
 config.py
+
+# Build artifacts
+build/
+dist/

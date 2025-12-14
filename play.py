@@ -6,6 +6,8 @@ Provides a menu to select different game modes.
 
 import chess
 from game_modes import PlayerVsPlayerGame, PlayerVsComputerGame, AIvsAIGame
+from opening_book import OpeningBook
+from puzzles import PuzzleTrainer
 import os
 import sys
 
@@ -25,17 +27,19 @@ def display_menu():
     print("1. Player vs Player")
     print("2. Player vs Computer")
     print("3. AI vs AI (Stockfish vs Gemini)")
-    print("4. Exit")
+    print("4. Puzzle Trainer")
+    print("5. Opening Book Explorer")
+    print("6. Exit")
     print("=" * 50)
 
 
 def get_user_choice():
     """Get user's menu choice."""
     while True:
-        choice = input("\nEnter your choice (1-4): ").strip()
-        if choice in ['1', '2', '3', '4']:
+        choice = input("\nEnter your choice (1-6): ").strip()
+        if choice in ['1', '2', '3', '4', '5', '6']:
             return choice
-        print("❌ Invalid choice! Please enter 1, 2, 3, or 4.")
+        print("❌ Invalid choice! Please enter 1, 2, 3, 4, 5, or 6.")
 
 
 def check_configuration():
@@ -56,7 +60,46 @@ def check_configuration():
 
 def play_pvp():
     """Start a Player vs Player game."""
+    print("\n" + "=" * 50)
+    print("PLAYER VS PLAYER SETUP")
+    print("=" * 50)
+    
+    # Ask about time controls
+    time_control = input("\nDo you want to use time controls? (y/n, default=n): ").strip().lower()
+    
     game = PlayerVsPlayerGame()
+    
+    if time_control == 'y':
+        print("\n⏱️  Time Control Options:")
+        print("1. Blitz (5 minutes)")
+        print("2. Rapid (10 minutes)")
+        print("3. Classical (30 minutes)")
+        print("4. Custom")
+        
+        while True:
+            choice = input("\nChoose option (1-4): ").strip()
+            if choice == '1':
+                game.enable_time_control(5, 0)
+                break
+            elif choice == '2':
+                game.enable_time_control(10, 0)
+                break
+            elif choice == '3':
+                game.enable_time_control(30, 0)
+                break
+            elif choice == '4':
+                while True:
+                    try:
+                        minutes = int(input("Enter minutes per player: ").strip())
+                        increment = int(input("Enter increment in seconds (0 for none): ").strip())
+                        game.enable_time_control(minutes, increment)
+                        break
+                    except ValueError:
+                        print("❌ Please enter valid numbers.")
+                break
+            else:
+                print("❌ Invalid choice!")
+    
     game.play()
 
 
@@ -94,6 +137,41 @@ def play_pvc():
             print("❌ Invalid input! Please enter a number.")
     
     game = PlayerVsComputerGame(STOCKFISH_PATH, player_color, skill_level)
+    
+    # Ask about time controls
+    time_control = input("\nDo you want to use time controls? (y/n, default=n): ").strip().lower()
+    
+    if time_control == 'y':
+        print("\n⏱️  Time Control Options:")
+        print("1. Blitz (5 minutes)")
+        print("2. Rapid (10 minutes)")
+        print("3. Classical (30 minutes)")
+        print("4. Custom")
+        
+        while True:
+            choice = input("\nChoose option (1-4): ").strip()
+            if choice == '1':
+                game.enable_time_control(5, 0)
+                break
+            elif choice == '2':
+                game.enable_time_control(10, 0)
+                break
+            elif choice == '3':
+                game.enable_time_control(30, 0)
+                break
+            elif choice == '4':
+                while True:
+                    try:
+                        minutes = int(input("Enter minutes per player: ").strip())
+                        increment = int(input("Enter increment in seconds (0 for none): ").strip())
+                        game.enable_time_control(minutes, increment)
+                        break
+                    except ValueError:
+                        print("❌ Please enter valid numbers.")
+                break
+            else:
+                print("❌ Invalid choice!")
+    
     game.play()
 
 
@@ -152,6 +230,129 @@ def play_ai_vs_ai():
     game.play()
 
 
+def play_puzzles():
+    """Start puzzle training mode."""
+    print("\n" + "=" * 50)
+    print("🧩 PUZZLE TRAINER")
+    print("=" * 50)
+    
+    trainer = PuzzleTrainer()
+    
+    print(f"\nAvailable puzzles: {len(trainer.puzzles)}")
+    print("\nOptions:")
+    print("1. Solve puzzles in order")
+    print("2. Random puzzle")
+    print("3. Filter by difficulty")
+    
+    while True:
+        choice = input("\nChoose option (1-3): ").strip()
+        if choice in ['1', '2', '3']:
+            break
+        print("❌ Invalid choice!")
+    
+    if choice == '1':
+        num = input("\nHow many puzzles do you want to solve? (default=3): ").strip()
+        num_puzzles = int(num) if num.isdigit() else 3
+        trainer.training_session(num_puzzles, STOCKFISH_PATH)
+    
+    elif choice == '2':
+        puzzle = trainer.get_random_puzzle()
+        if puzzle:
+            trainer.solve_puzzle(puzzle, STOCKFISH_PATH)
+    
+    elif choice == '3':
+        print("\nDifficulty levels:")
+        print("1. Easy")
+        print("2. Medium")
+        print("3. Hard")
+        
+        diff_choice = input("\nChoose difficulty (1-3): ").strip()
+        difficulty_map = {'1': 'Easy', '2': 'Medium', '3': 'Hard'}
+        difficulty = difficulty_map.get(diff_choice, 'Easy')
+        
+        puzzle = trainer.get_random_puzzle(difficulty)
+        if puzzle:
+            trainer.solve_puzzle(puzzle, STOCKFISH_PATH)
+        else:
+            print(f"\n❌ No puzzles found for difficulty: {difficulty}")
+
+
+def explore_openings():
+    """Explore the opening book."""
+    print("\n" + "=" * 50)
+    print("📚 OPENING BOOK EXPLORER")
+    print("=" * 50)
+    
+    book = OpeningBook()
+    
+    print("\nOptions:")
+    print("1. View all openings")
+    print("2. Explore opening interactively")
+    print("3. Test opening identification")
+    
+    while True:
+        choice = input("\nChoose option (1-3): ").strip()
+        if choice in ['1', '2', '3']:
+            break
+        print("❌ Invalid choice!")
+    
+    if choice == '1':
+        print("\n📖 All Openings in Database:")
+        for name, eco in book.get_all_openings():
+            print(f"  • {name} ({eco})")
+    
+    elif choice == '2':
+        print("\n🎮 Interactive Opening Explorer")
+        print("Play moves to see if they match known openings")
+        print("Enter 'quit' to exit\n")
+        
+        board = chess.Board()
+        print(board)
+        
+        while not board.is_game_over():
+            book.display_opening_info(board)
+            
+            suggested = book.suggest_opening_move(board)
+            if suggested:
+                print(f"💡 Book suggestion: {board.san(suggested)} ({suggested.uci()})")
+            
+            move_input = input(f"\n{'White' if board.turn == chess.WHITE else 'Black'} to move (UCI format or 'quit'): ").strip().lower()
+            
+            if move_input == 'quit':
+                break
+            
+            try:
+                move = chess.Move.from_uci(move_input)
+                if move in board.legal_moves:
+                    san = board.san(move)
+                    board.push(move)
+                    print(f"\nPlayed: {san}")
+                    print(board)
+                else:
+                    print("❌ Illegal move!")
+            except Exception as e:
+                print(f"❌ Invalid input: {e}")
+    
+    elif choice == '3':
+        print("\n🧪 Testing Opening Identification")
+        print("\nTesting Italian Game...")
+        
+        board = chess.Board()
+        for move_uci in ["e2e4", "e7e5", "g1f3", "b8c6", "f1c4"]:
+            move = chess.Move.from_uci(move_uci)
+            san = board.san(move)
+            board.push(move)
+            print(f"  {san}", end=" ")
+        
+        print("\n")
+        book.display_opening_info(board)
+        
+        suggested = book.suggest_opening_move(board)
+        if suggested:
+            print(f"💡 Suggested continuation: {board.san(suggested)}")
+
+
+
 def main():
     """Main application loop."""
     print("\n" + "♔" * 50)
@@ -170,6 +371,10 @@ def main():
         elif choice == '3':
             play_ai_vs_ai()
         elif choice == '4':
+            play_puzzles()
+        elif choice == '5':
+            explore_openings()
+        elif choice == '6':
             print("\n👋 Thanks for playing Cyberchess! Goodbye!")
             break
             
