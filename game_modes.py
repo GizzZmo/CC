@@ -16,15 +16,23 @@ from typing import Optional, List, Tuple
 class ChessGame:
     """Base chess game class with common functionality."""
     
-    def __init__(self):
+    # Available board themes
+    THEMES = {
+        'ascii': 'ASCII (letters and dots)',
+        'unicode': 'Unicode (chess symbols)',
+        'borders': 'Unicode with borders and coordinates'
+    }
+    
+    def __init__(self, theme: str = 'ascii'):
         self.board = chess.Board()
         self.move_history = []
         self.time_controls = None  # Optional time control settings
         self.white_time = None
         self.black_time = None
+        self.theme = theme if theme in self.THEMES else 'ascii'
         
     def display_board(self):
-        """Display the current board state."""
+        """Display the current board state using the selected theme."""
         print("\n" + "=" * 50)
         print(f"Move {self.board.fullmove_number}")
         
@@ -34,7 +42,13 @@ class ChessGame:
             black_time_str = self.format_time(self.black_time)
             print(f"⏱️  White: {white_time_str} | Black: {black_time_str}")
         
-        print(self.board)
+        # Display board based on theme
+        if self.theme == 'unicode':
+            print(self.board.unicode())
+        elif self.theme == 'borders':
+            print(self.board.unicode(borders=True))
+        else:  # ascii
+            print(self.board)
         
         # Display game state
         if self.board.is_check():
@@ -71,6 +85,21 @@ class ChessGame:
         self.board.push(move)
         self.move_history.append(san_move)
         return san_move
+    
+    def set_theme(self, theme: str):
+        """Set the board display theme."""
+        if theme in self.THEMES:
+            self.theme = theme
+            print(f"✅ Board theme set to: {self.THEMES[theme]}")
+        else:
+            print(f"❌ Invalid theme. Available themes: {', '.join(self.THEMES.keys())}")
+    
+    @classmethod
+    def list_themes(cls):
+        """List all available board themes."""
+        print("\n🎨 Available Board Themes:")
+        for key, description in cls.THEMES.items():
+            print(f"  {key}: {description}")
         
     def is_game_over(self) -> bool:
         """Check if the game is over."""
@@ -260,8 +289,8 @@ class ChessGame:
 class PlayerVsPlayerGame(ChessGame):
     """Player vs Player chess game."""
     
-    def __init__(self):
-        super().__init__()
+    def __init__(self, theme: str = 'ascii'):
+        super().__init__(theme=theme)
         
     def get_player_move(self, player_name: str) -> chess.Move:
         """Get a move from a human player."""
@@ -334,8 +363,8 @@ class PlayerVsComputerGame(ChessGame):
     # AI thinking time strategy: use this fraction of remaining time per move
     AI_TIME_FRACTION = 20
     
-    def __init__(self, stockfish_path: str, player_color: chess.Color = chess.WHITE, skill_level: int = 10):
-        super().__init__()
+    def __init__(self, stockfish_path: str, player_color: chess.Color = chess.WHITE, skill_level: int = 10, theme: str = 'ascii'):
+        super().__init__(theme=theme)
         self.stockfish_path = stockfish_path
         self.player_color = player_color
         self.skill_level = skill_level
@@ -461,8 +490,8 @@ class AIvsAIGame(ChessGame):
     Supports configurable or randomized AI color assignment for diverse training data.
     """
     
-    def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5, stockfish_color: Optional[chess.Color] = None):
-        super().__init__()
+    def __init__(self, stockfish_path: str, google_api_key: str, stockfish_skill: int = 5, stockfish_color: Optional[chess.Color] = None, theme: str = 'ascii'):
+        super().__init__(theme=theme)
         self.stockfish_path = stockfish_path
         self.stockfish_skill = stockfish_skill
         self.engine = None

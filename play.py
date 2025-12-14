@@ -18,6 +18,25 @@ STOCKFISH_PATH = os.environ.get("STOCKFISH_PATH", "YOUR_STOCKFISH_PATH_HERE")
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY", "YOUR_GEMINI_API_KEY_HERE")
 
 
+def get_board_theme():
+    """Get user's preferred board theme."""
+    print("\n🎨 Board Display Theme:")
+    print("1. ASCII (letters and dots) - Default, works everywhere")
+    print("2. Unicode (chess symbols) - Prettier, requires Unicode support")
+    print("3. Borders (Unicode with borders and coordinates) - Most detailed")
+    
+    while True:
+        choice = input("\nEnter your choice (1-3, default=1): ").strip()
+        if choice == '' or choice == '1':
+            return 'ascii'
+        elif choice == '2':
+            return 'unicode'
+        elif choice == '3':
+            return 'borders'
+        else:
+            print("❌ Invalid choice! Please enter 1, 2, or 3.")
+
+
 def display_menu():
     """Display the main menu."""
     print("\n" + "=" * 50)
@@ -65,10 +84,13 @@ def play_pvp():
     print("PLAYER VS PLAYER SETUP")
     print("=" * 50)
     
+    # Get board theme preference
+    theme = get_board_theme()
+    
     # Ask about time controls
     time_control = input("\nDo you want to use time controls? (y/n, default=n): ").strip().lower()
     
-    game = PlayerVsPlayerGame()
+    game = PlayerVsPlayerGame(theme=theme)
     
     if time_control == 'y':
         print("\n⏱️  Time Control Options:")
@@ -113,6 +135,9 @@ def play_pvc():
     print("PLAYER VS COMPUTER SETUP")
     print("=" * 50)
     
+    # Get board theme preference
+    theme = get_board_theme()
+    
     # Choose color
     while True:
         color_choice = input("\nDo you want to play as White or Black? (w/b): ").strip().lower()
@@ -137,7 +162,7 @@ def play_pvc():
         except ValueError:
             print("❌ Invalid input! Please enter a number.")
     
-    game = PlayerVsComputerGame(STOCKFISH_PATH, player_color, skill_level)
+    game = PlayerVsComputerGame(STOCKFISH_PATH, player_color, skill_level, theme=theme)
     
     # Ask about time controls
     time_control = input("\nDo you want to use time controls? (y/n, default=n): ").strip().lower()
@@ -189,6 +214,9 @@ def play_ai_vs_ai():
     print("AI VS AI SETUP")
     print("=" * 50)
     
+    # Get board theme preference
+    theme = get_board_theme()
+    
     # Choose Stockfish difficulty
     while True:
         try:
@@ -227,7 +255,7 @@ def play_ai_vs_ai():
         else:
             print("❌ Invalid choice! Enter 1, 2, or 3.")
     
-    game = AIvsAIGame(STOCKFISH_PATH, GOOGLE_API_KEY, skill_level, stockfish_color)
+    game = AIvsAIGame(STOCKFISH_PATH, GOOGLE_API_KEY, skill_level, stockfish_color, theme=theme)
     game.play()
 
 

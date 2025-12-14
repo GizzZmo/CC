@@ -19,6 +19,13 @@ GOOGLE_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
 # 0 = Beginner, 10 = Intermediate, 20 = Grandmaster
 DEFAULT_SKILL_LEVEL = 10
 
+# Board Display Theme
+# Options: 'ascii', 'unicode', 'borders'
+# - ascii: Letters and dots (default, works everywhere)
+# - unicode: Chess symbols (prettier, requires Unicode support)
+# - borders: Unicode with borders and coordinates (most detailed)
+DEFAULT_BOARD_THEME = "ascii"
+
 # PGN file locations for saving games
 PVP_GAMES_FILE = "pvp_games.pgn"
 PVC_GAMES_FILE = "pvc_games.pgn"
