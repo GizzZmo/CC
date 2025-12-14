@@ -67,6 +67,11 @@ To create an accessible, feature-rich chess platform that serves players of all 
   - ✅ Move history tracking (UCI and SAN notation)
   - ✅ Game state display
   - ✅ PGN import/export for game storage and replay
+- **Board Display Themes**: 
+  - ✅ ASCII theme (letters and dots) - Default, works everywhere
+  - ✅ Unicode theme (chess symbols) - Prettier, requires Unicode support
+  - ✅ Borders theme (Unicode with borders and coordinates) - Most detailed
+  - ✅ Theme selection available in all game modes
 - **Interactive UI**: Console-based with clear board visualization
 - **Example Assets**: Famous chess games collection for learning
 - **Testing**: Comprehensive automated test suite
@@ -78,7 +83,6 @@ To create an accessible, feature-rich chess platform that serves players of all 
   - User accounts and rating system (requires database)
 - **UI Enhancements**:
   - Graphical UI - web or desktop (large scope project)
-  - Multiple themes and board customization
   - Mobile responsiveness
 
 ## Project Structure
@@ -189,12 +193,15 @@ python play.py
 
 This provides a menu with options:
 1. **Player vs Player** - Two humans playing locally
+   - Choose board display theme (ASCII, Unicode, or Borders)
    - Optional time controls (Blitz, Rapid, Classical, or Custom)
 2. **Player vs Computer** - Play against Stockfish AI
+   - Choose board display theme
    - Choose your color and difficulty level (0-20)
    - Optional time controls
    - Post-game analysis with engine evaluation
 3. **AI vs AI** - Watch Stockfish play against Gemini AI
+   - Choose board display theme
    - Choose color assignment: classic, reversed, or random (recommended for training)
    - Configurable Stockfish skill level
 4. **Puzzle Trainer** - Solve tactical chess puzzles
@@ -206,6 +213,36 @@ This provides a menu with options:
    - Interactive opening practice
    - Opening identification
 6. Exit
+
+### Board Display Themes
+
+Cyberchess supports three board display themes:
+
+- **ASCII** (default): Uses letters and dots, works on all terminals
+  ```
+  r n b q k b n r
+  p p p p p p p p
+  . . . . . . . .
+  ```
+
+- **Unicode**: Uses chess symbols for a prettier display
+  ```
+  ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜
+  ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟
+  ⭘ ⭘ ⭘ ⭘ ⭘ ⭘ ⭘ ⭘
+  ```
+
+- **Borders**: Unicode with borders and coordinates for detailed view
+  ```
+    -----------------
+  8 |♖|♘|♗|♕|♔|♗|♘|♖|
+    -----------------
+  7 |♙|♙|♙|♙|♙|♙|♙|♙|
+    -----------------
+     a b c d e f g h
+  ```
+
+You can select your preferred theme when starting any game mode. The theme can also be configured in `config.py` by setting `DEFAULT_BOARD_THEME`.
 
 ### Legacy Mode
 
@@ -376,6 +413,7 @@ For a detailed history of changes, see [CHANGELOG.md](CHANGELOG.md).
 - ✅ Added time controls (Blitz, Rapid, Classical, Custom)
 - ✅ Added opening book with 12+ popular openings
 - ✅ Added chess puzzle trainer with 8+ tactical puzzles
+- ✅ Added board display themes (ASCII, Unicode, Borders)
 - ✅ Added comprehensive automated test suite
 - ✅ Added build system for creating distribution packages
 - ✅ Enhanced documentation with installation guide

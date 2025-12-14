@@ -5,6 +5,27 @@ All notable changes to the Cyberchess project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2025-12-14
+
+### Added
+- **Board Display Themes**
+  - Three display themes for board visualization
+  - ASCII theme (letters and dots) - Default, works on all terminals
+  - Unicode theme (chess symbols) - Prettier display with Unicode support
+  - Borders theme (Unicode with borders and coordinates) - Most detailed view
+  - Theme selection integrated into all game modes (PvP, PvC, AI vs AI)
+  - `set_theme()` method for dynamic theme switching during games
+  - `list_themes()` class method to display available themes
+  - Theme configuration added to `config_template.py`
+  - Interactive theme selection in `play.py` for all game modes
+
+### Changed
+- Updated `ChessGame` base class to accept theme parameter
+- Modified `display_board()` method to use selected theme
+- Updated `PlayerVsPlayerGame`, `PlayerVsComputerGame`, and `AIvsAIGame` to support theme parameter
+- Enhanced configuration template with `DEFAULT_BOARD_THEME` setting
+- Updated README.md with board theme documentation and usage examples
+
 ## [0.4.0] - 2025-12-13
 
 ### Added - Phase 3 & 4 Implementation (Complete)
