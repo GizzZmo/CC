@@ -46,7 +46,7 @@ class ChessGame:
         if self.theme == 'unicode':
             print(self.board.unicode())
         elif self.theme == 'borders':
-            print(self.board.unicode(invert_color=True, borders=True))
+            print(self.board.unicode(borders=True))
         else:  # ascii
             print(self.board)
         
