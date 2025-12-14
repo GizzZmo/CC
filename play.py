@@ -29,17 +29,18 @@ def display_menu():
     print("3. AI vs AI (Stockfish vs Gemini)")
     print("4. Puzzle Trainer")
     print("5. Opening Book Explorer")
-    print("6. Exit")
+    print("6. About")
+    print("7. Exit")
     print("=" * 50)
 
 
 def get_user_choice():
     """Get user's menu choice."""
     while True:
-        choice = input("\nEnter your choice (1-6): ").strip()
-        if choice in ['1', '2', '3', '4', '5', '6']:
+        choice = input("\nEnter your choice (1-7): ").strip()
+        if choice in ['1', '2', '3', '4', '5', '6', '7']:
             return choice
-        print("❌ Invalid choice! Please enter 1, 2, 3, 4, 5, or 6.")
+        print("❌ Invalid choice! Please enter 1, 2, 3, 4, 5, 6, or 7.")
 
 
 def check_configuration():
@@ -352,6 +353,52 @@ def explore_openings():
             print(f"💡 Suggested continuation: {board.san(suggested)}")
 
 
+def show_about():
+    """Display information about the application."""
+    print("\n" + "=" * 60)
+    print("♔♕♖♗♘♙  ABOUT CYBERCHESS  ♟♞♝♜♛♚")
+    print("=" * 60)
+    
+    print("\n📋 APPLICATION INFO")
+    print("  Name:        Cyberchess (CC)")
+    print("  Version:     0.4.0")
+    print("  Description: A modern chess platform with multiple game modes")
+    
+    print("\n✨ FEATURES")
+    print("  • Full chess rules implementation")
+    print("  • Player vs Player mode")
+    print("  • Player vs Computer (Stockfish AI)")
+    print("  • AI vs AI (Stockfish vs Gemini)")
+    print("  • Chess puzzle trainer with 8+ tactical puzzles")
+    print("  • Opening book with 12+ popular openings")
+    print("  • Time controls (Blitz, Rapid, Classical, Custom)")
+    print("  • Post-game engine analysis")
+    print("  • PGN import/export")
+    
+    print("\n🔧 TECHNOLOGY STACK")
+    print("  • Language: Python 3.7+")
+    print("  • Chess Library: python-chess")
+    print("  • AI Engine: Stockfish")
+    print("  • AI Integration: Google Gemini 1.5 Flash")
+    
+    print("\n👥 PROJECT")
+    print("  • Repository: https://github.com/GizzZmo/CC")
+    print("  • Issues: https://github.com/GizzZmo/CC/issues")
+    print("  • Discussions: https://github.com/GizzZmo/CC/discussions")
+    
+    print("\n📄 LICENSE")
+    print("  • License information will be specified as development progresses")
+    
+    print("\n💡 ACKNOWLEDGMENTS")
+    print("  • Chess programming community for insights and best practices")
+    print("  • Open source chess engines and libraries for inspiration")
+    print("  • All contributors who help make this project better")
+    
+    print("\n" + "=" * 60)
+    print("Status: 🎉 Phase 3 & 4 Complete - Advanced Features Implemented!")
+    print("Last Updated: December 2025")
+    print("=" * 60)
+
 
 def main():
     """Main application loop."""
@@ -375,6 +422,8 @@ def main():
         elif choice == '5':
             explore_openings()
         elif choice == '6':
+            show_about()
+        elif choice == '7':
             print("\n👋 Thanks for playing Cyberchess! Goodbye!")
             break
             
