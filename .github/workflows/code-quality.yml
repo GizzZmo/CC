@@ -35,20 +35,16 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      continue-on-error: true
     
     - name: Check code formatting with black
       run: |
         black --check --diff .
-      continue-on-error: true
     
     - name: Check import sorting with isort
       run: |
         isort --check-only --diff .
-      continue-on-error: true
     
     - name: Run security check with bandit
       run: |
         pip install bandit
         bandit -r . -ll
-      continue-on-error: true
