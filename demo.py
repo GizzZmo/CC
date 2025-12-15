@@ -9,10 +9,10 @@ import chess
 import chess.pgn
 
 # Configure stdout/stderr to use UTF-8 encoding on Windows
-if sys.stdout.encoding != 'utf-8':
-    sys.stdout.reconfigure(encoding='utf-8')
-if sys.stderr.encoding != 'utf-8':
-    sys.stderr.reconfigure(encoding='utf-8')
+if sys.stdout.encoding != "utf-8":
+    sys.stdout.reconfigure(encoding="utf-8")
+if sys.stderr.encoding != "utf-8":
+    sys.stderr.reconfigure(encoding="utf-8")
 
 
 def demo_basic_features():
@@ -20,26 +20,26 @@ def demo_basic_features():
     print("=" * 60)
     print("DEMO 1: Basic Chess Features")
     print("=" * 60)
-    
+
     board = chess.Board()
     print("\nStarting position:")
     print(board)
-    
+
     # Make some moves
     print("\n1. Playing e2-e4 (e4)")
     board.push_san("e4")
     print(board)
-    
+
     print("\n2. Playing e7-e5 (e5)")
     board.push_san("e5")
     print(board)
-    
+
     print("\n3. Playing Ng1-f3 (Nf3)")
     board.push_san("Nf3")
     print(board)
-    
+
     print("\nMove history (UCI):", [move.uci() for move in board.move_stack])
-    
+
     # To get SAN, we need to replay the game from the start
     temp_board = chess.Board()
     san_moves = []
@@ -54,7 +54,7 @@ def demo_special_moves():
     print("\n\n" + "=" * 60)
     print("DEMO 2: Special Moves (Castling, En Passant, Promotion)")
     print("=" * 60)
-    
+
     # Castling
     print("\n--- CASTLING ---")
     board = chess.Board()
@@ -64,7 +64,7 @@ def demo_special_moves():
         board.push_san(move)
     print("After castling kingside (O-O):")
     print(board)
-    
+
     # En Passant
     print("\n--- EN PASSANT ---")
     board = chess.Board()
@@ -74,19 +74,19 @@ def demo_special_moves():
         board.push_san(move)
     print("Before en passant capture:")
     print(board)
-    
+
     # En passant is available
     board.push_san("exf6")  # en passant capture
     print("\nAfter en passant (exf6):")
     print(board)
-    
+
     # Pawn Promotion
     print("\n--- PAWN PROMOTION ---")
     # Create a position where we can promote
     board = chess.Board("8/3P4/8/8/8/8/8/4K2k w - - 0 1")
     print("Before promotion (pawn on d7):")
     print(board)
-    
+
     board.push_san("d8=Q")  # Promote to queen
     print("\nAfter promotion to Queen (d8=Q):")
     print(board)
@@ -97,7 +97,7 @@ def demo_game_states():
     print("\n\n" + "=" * 60)
     print("DEMO 3: Game States (Check, Checkmate, Stalemate)")
     print("=" * 60)
-    
+
     # Check
     print("\n--- CHECK ---")
     board = chess.Board()
@@ -107,7 +107,7 @@ def demo_game_states():
     print(board)
     print(f"Is in check? {board.is_check()}")
     print(f"Checking piece: King is attacked!")
-    
+
     # Checkmate - Scholar's Mate
     print("\n--- CHECKMATE (Scholar's Mate) ---")
     board = chess.Board()
@@ -117,7 +117,7 @@ def demo_game_states():
     print(board)
     print(f"Is checkmate? {board.is_checkmate()}")
     print(f"Result: {board.result()}")
-    
+
     # Stalemate
     print("\n--- STALEMATE ---")
     board = chess.Board("7k/8/6Q1/8/8/8/8/7K b - - 0 1")
@@ -132,14 +132,14 @@ def demo_draw_conditions():
     print("\n\n" + "=" * 60)
     print("DEMO 4: Draw Conditions")
     print("=" * 60)
-    
+
     # Insufficient material
     print("\n--- INSUFFICIENT MATERIAL ---")
     board = chess.Board("8/8/8/8/8/3k4/8/3K4 w - - 0 1")
     print(board)
     print(f"Insufficient material? {board.is_insufficient_material()}")
     print("Only kings remaining = Draw")
-    
+
     # Note: 50-move rule and threefold repetition are harder to demo
     # in a simple script, but they are automatically tracked by python-chess
     print("\n--- OTHER DRAW CONDITIONS ---")
@@ -152,12 +152,12 @@ def demo_move_generation():
     print("\n\n" + "=" * 60)
     print("DEMO 5: Move Generation and Validation")
     print("=" * 60)
-    
+
     board = chess.Board()
     print("\nStarting position - White to move")
     print(f"Number of legal moves: {board.legal_moves.count()}")
     print(f"Legal moves: {', '.join([move.uci() for move in list(board.legal_moves)])}")
-    
+
     # After a few moves
     board.push_san("e4")
     board.push_san("e5")
@@ -165,7 +165,9 @@ def demo_move_generation():
     print("\nAfter 1.e4 e5 2.Nf3 - Black to move")
     print(board)
     print(f"Number of legal moves: {board.legal_moves.count()}")
-    print(f"Sample legal moves: {', '.join([move.uci() for move in list(board.legal_moves)[:10]])}...")
+    print(
+        f"Sample legal moves: {', '.join([move.uci() for move in list(board.legal_moves)[:10]])}..."
+    )
 
 
 def demo_pgn_loading():
@@ -173,18 +175,18 @@ def demo_pgn_loading():
     print("\n\n" + "=" * 60)
     print("DEMO 6: Loading Games from PGN")
     print("=" * 60)
-    
+
     try:
         with open("examples/famous_games.pgn") as pgn_file:
             # Load first game (The Immortal Game)
             game = chess.pgn.read_game(pgn_file)
-            
+
             print(f"\nGame: {game.headers['Event']}")
             print(f"White: {game.headers['White']}")
             print(f"Black: {game.headers['Black']}")
             print(f"Date: {game.headers['Date']}")
             print(f"Result: {game.headers['Result']}")
-            
+
             print("\nReplaying moves...")
             board = game.board()
             move_count = 0
@@ -199,7 +201,7 @@ def demo_pgn_loading():
                     print(f"{board.fullmove_number - 1}. ... {san}")
                 else:  # Just made white's move
                     print(f"{board.fullmove_number}. {san}", end=" ")
-                    
+
     except FileNotFoundError:
         print("\nNote: Famous games PGN file not found.")
         print("Run this from the repository root directory.")
@@ -211,14 +213,14 @@ def main():
     print("CYBERCHESS - FEATURE DEMONSTRATION")
     print("Showcasing Phase 2 Roadmap Implementation")
     print("♔" * 60)
-    
+
     demo_basic_features()
     demo_special_moves()
     demo_game_states()
     demo_draw_conditions()
     demo_move_generation()
     demo_pgn_loading()
-    
+
     print("\n\n" + "=" * 60)
     print("✅ All demonstrations complete!")
     print("=" * 60)
