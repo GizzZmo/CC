@@ -5,6 +5,48 @@ All notable changes to the Cyberchess project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-12-15
+
+### Added
+- **Cyberpunk GUI** - Graphical user interface with futuristic neon theme
+  - Neon color scheme with glowing effects (cyan, magenta, yellow, green)
+  - Click-to-move interface for intuitive piece movement
+  - Real-time game status and move history display
+  - Animated background with cyberpunk aesthetics
+  - Support for Player vs Player and Player vs Computer modes
+  - Unicode chess piece symbols with color-coded players
+  - Legal move highlighting and last move indicators
+  - Full implementation in `cyberpunk_gui.py` using tkinter
+  
+- **Main Launcher** (`launcher.py`)
+  - Unified entry point for choosing between GUI and CLI interfaces
+  - ASCII art branding for Cyberchess
+  - Menu-driven interface for mode selection
+  - Graceful error handling for missing dependencies
+  
+- **Cyberpunk GUI Guide** (`CYBERPUNK_GUI_GUIDE.md`)
+  - Comprehensive documentation for the GUI interface
+  - Feature descriptions and usage instructions
+  - Troubleshooting guide for common issues
+  - Technical details and requirements
+  
+- **GUI Preview** (`gui_preview.html`)
+  - HTML demo showcasing the cyberpunk aesthetic
+  - Visual preview of the GUI's neon theme
+  - Animated background effects
+
+### Changed
+- Updated README.md to reflect GUI implementation completion
+- Marked "Graphical UI" as completed in Phase 4 roadmap
+- Enhanced project structure documentation with GUI files
+- Updated usage instructions to include both GUI and CLI options
+
+### Technical Details
+- GUI built with Python's tkinter library (cross-platform compatible)
+- Integrates with existing chess engine and Stockfish
+- Maintains consistent game logic with CLI version
+- Supports optional Stockfish engine for computer opponent
+
 ## [0.4.1] - 2025-12-14
 
 ### Added
@@ -228,12 +270,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ **Phase 1**: Foundation - Complete
 - ✅ **Phase 2**: Core Features - Complete
 - ✅ **Phase 3**: Advanced Features - Complete (5/7 features, 2 deferred)
-- ✅ **Phase 4**: Polish - Complete (4/6 features, 2 deferred)
-- 🔮 **Future**: Online features and GUI (requires infrastructure)
+- ✅ **Phase 4**: Polish - Complete (5/6 features, 1 deferred)
+- 🔮 **Future**: Online features and mobile GUI (requires infrastructure)
 
 ## Version History
 
-- **v0.4.0** (Current) - Phase 3 & 4 Complete: All feasible advanced features and polish
+- **v0.5.0** (Current) - Cyberpunk GUI: Desktop graphical interface with neon theme
+- **v0.4.1** - Board Display Themes: Multiple visualization options
+- **v0.4.0** - Phase 3 & 4 Complete: All feasible advanced features and polish
 - **v0.3.0** - Phase 3 Started: Configurable AI color assignment
 - **v0.2.0** - Phase 2 Complete: Multiple game modes, interactive launcher, demo assets
 - **v0.1.0** - Phase 1 Complete: Basic AI vs AI implementation
@@ -243,5 +287,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The following features have been deferred as they require external infrastructure:
 - **Online Multiplayer**: Requires server infrastructure and networking code
 - **User Accounts and Rating System**: Requires database and authentication system
-- **Graphical UI**: Large scope project requiring GUI framework (web or desktop)
-- **Mobile Responsiveness**: Depends on graphical UI implementation
+- **Mobile Responsiveness**: Requires mobile-specific GUI implementation
