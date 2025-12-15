@@ -46,5 +46,5 @@ jobs:
         exempt-pr-labels: 'pinned,security,work-in-progress'
         
         # General settings
-        operations-per-run: 30
+        operations-per-run: 100
         remove-stale-when-updated: true

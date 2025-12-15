@@ -43,10 +43,24 @@ jobs:
     - name: Generate changelog for release
       id: changelog
       run: |
-        # Extract the latest version section from CHANGELOG.md
+        # Create release notes
         echo "## What's Changed" > release_notes.md
         echo "" >> release_notes.md
-        sed -n '/^## \[/,/^## \[/p' CHANGELOG.md | sed '1d;$d' >> release_notes.md || echo "See CHANGELOG.md for details" >> release_notes.md
+        
+        # Try to extract changelog section, fallback to simple message
+        if [ -f "CHANGELOG.md" ]; then
+          # Extract section between first two version headers, or use default
+          awk '/^## /{if(++count==1){flag=1; next} else {flag=0}} flag' CHANGELOG.md >> release_notes.md 2>/dev/null || true
+          
+          # If extraction failed or file is empty, add default message
+          if [ ! -s release_notes.md ] || [ $(wc -l < release_notes.md) -lt 2 ]; then
+            echo "## What's Changed" > release_notes.md
+            echo "" >> release_notes.md
+            echo "See [CHANGELOG.md](CHANGELOG.md) for full details." >> release_notes.md
+          fi
+        else
+          echo "See commit history for details." >> release_notes.md
+        fi
     
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
