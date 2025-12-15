@@ -287,4 +287,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The following features have been deferred as they require external infrastructure:
 - **Online Multiplayer**: Requires server infrastructure and networking code
 - **User Accounts and Rating System**: Requires database and authentication system
-- **Mobile Responsiveness**: Requires mobile-specific GUI implementation
+- **Mobile Responsiveness**: Requires mobile-specific GUI implementation implementation
