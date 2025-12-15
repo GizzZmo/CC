@@ -4,8 +4,15 @@ Demo script showing all Cyberchess capabilities.
 This demonstrates the features implemented in Phase 2.
 """
 
+import sys
 import chess
 import chess.pgn
+
+# Configure stdout/stderr to use UTF-8 encoding on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 def demo_basic_features():

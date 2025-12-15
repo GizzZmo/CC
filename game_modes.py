@@ -3,6 +3,7 @@ Game modes module for Cyberchess.
 Provides different ways to play chess (PvP, PvE, AI vs AI).
 """
 
+import sys
 import chess
 import chess.engine
 import chess.pgn
@@ -11,6 +12,12 @@ import random
 import datetime
 import time
 from typing import Optional, List, Tuple
+
+# Configure stdout/stderr to use UTF-8 encoding on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 class ChessGame:

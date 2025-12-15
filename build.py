@@ -11,6 +11,12 @@ import zipfile
 import datetime
 from pathlib import Path
 
+# Configure stdout/stderr to use UTF-8 encoding on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
+
 
 VERSION = "0.4.0"
 PROJECT_NAME = "Cyberchess"
