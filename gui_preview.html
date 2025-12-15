@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ CYBERCHESS GUI Preview ⚡</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #0a0e27;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            color: #00fff9;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        /* Animated background */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 249, 0.03) 2px,
+                    rgba(0, 255, 249, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: -1;
+            animation: scan 8s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .title h1 {
+            font-size: 3em;
+            color: #00fff9;
+            text-shadow: 
+                0 0 10px #00fff9,
+                0 0 20px #00fff9,
+                0 0 30px #00fff9,
+                0 0 40px #00fff9;
+            letter-spacing: 15px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 
+                    0 0 10px #00fff9,
+                    0 0 20px #00fff9,
+                    0 0 30px #00fff9;
+            }
+            to {
+                text-shadow: 
+                    0 0 20px #00fff9,
+                    0 0 30px #00fff9,
+                    0 0 40px #00fff9,
+                    0 0 50px #00fff9;
+            }
+        }
+        
+        .subtitle {
+            color: #ff00ff;
+            font-size: 1.2em;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .board-section {
+            flex: 0 0 600px;
+        }
+        
+        .board-container {
+            border: 3px solid #00fff9;
+            padding: 10px;
+            background: #0a0e27;
+            box-shadow: 
+                0 0 20px #00fff9,
+                inset 0 0 20px rgba(0, 255, 249, 0.1);
+        }
+        
+        .coordinates-top,
+        .coordinates-bottom {
+            display: flex;
+            justify-content: space-around;
+            padding: 5px 50px;
+            color: #ffff00;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ffff00;
+        }
+        
+        .board-row {
+            display: flex;
+            align-items: center;
+        }
+        
+        .coord-left,
+        .coord-right {
+            width: 40px;
+            text-align: center;
+            color: #ffff00;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ffff00;
+        }
+        
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 70px);
+            grid-template-rows: repeat(8, 70px);
+            gap: 2px;
+            padding: 2px;
+        }
+        
+        .square {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        
+        .square.light {
+            background: #2d3561;
+        }
+        
+        .square.dark {
+            background: #1a1f3a;
+        }
+        
+        .square:hover {
+            border: 2px solid #ffff00;
+            box-shadow: 
+                0 0 10px #ffff00,
+                inset 0 0 10px rgba(255, 255, 0, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .square.selected {
+            background: #ffff00 !important;
+            box-shadow: 
+                0 0 20px #ffff00,
+                inset 0 0 20px rgba(255, 255, 0, 0.3);
+        }
+        
+        .square.highlight {
+            background: #ff00ff !important;
+            box-shadow: 0 0 15px #ff00ff;
+        }
+        
+        .square.last-move {
+            background: #39ff14 !important;
+            box-shadow: 0 0 15px #39ff14;
+        }
+        
+        .piece.white {
+            color: #00fff9;
+            text-shadow: 0 0 10px #00fff9;
+        }
+        
+        .piece.black {
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+        
+        .info-panel {
+            flex: 0 0 400px;
+        }
+        
+        .panel {
+            border: 2px solid #ff00ff;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(26, 31, 58, 0.5);
+            box-shadow: 
+                0 0 15px #ff00ff,
+                inset 0 0 15px rgba(255, 0, 255, 0.1);
+        }
+        
+        .panel h2 {
+            color: #ff00ff;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+        
+        .info-item {
+            padding: 8px;
+            margin: 5px 0;
+            border-left: 3px solid #00fff9;
+            padding-left: 15px;
+        }
+        
+        .info-item.status {
+            color: #39ff14;
+            text-shadow: 0 0 5px #39ff14;
+        }
+        
+        .move-history {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #1a1f3a;
+            padding: 10px;
+            border: 1px solid #00fff9;
+        }
+        
+        .move-history::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .move-history::-webkit-scrollbar-track {
+            background: #0a0e27;
+        }
+        
+        .move-history::-webkit-scrollbar-thumb {
+            background: #00fff9;
+            box-shadow: 0 0 5px #00fff9;
+        }
+        
+        .move-item {
+            padding: 5px;
+            color: #39ff14;
+            font-size: 0.9em;
+        }
+        
+        .controls {
+            border: 2px solid #ffff00;
+            padding: 20px;
+            box-shadow: 
+                0 0 15px #ffff00,
+                inset 0 0 15px rgba(255, 255, 0, 0.1);
+        }
+        
+        .controls h2 {
+            color: #ffff00;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px #ffff00;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            background: #1a1f3a;
+            border: 2px solid #00fff9;
+            color: #00fff9;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-shadow: 0 0 5px #00fff9;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #00fff9;
+            color: #0a0e27;
+            box-shadow: 0 0 20px #00fff9;
+            transform: translateY(-2px);
+        }
+        
+        .btn.danger {
+            border-color: #ff073a;
+            color: #ff073a;
+        }
+        
+        .btn.danger:hover {
+            background: #ff073a;
+            color: #0a0e27;
+            box-shadow: 0 0 20px #ff073a;
+        }
+        
+        /* Glitch effect */
+        .glitch {
+            position: relative;
+            animation: glitch-skew 3s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-skew {
+            0% {
+                transform: skew(0deg);
+            }
+            10% {
+                transform: skew(0deg);
+            }
+            11% {
+                transform: skew(-2deg);
+            }
+            20% {
+                transform: skew(0deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">
+            <h1 class="glitch">⚡ CYBERCHESS ⚡</h1>
+            <div class="subtitle">[ N E O N   C H E S S   I N T E R F A C E ]</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="board-section">
+                <div class="board-container">
+                    <div class="coordinates-top">
+                        <span>A</span><span>B</span><span>C</span><span>D</span>
+                        <span>E</span><span>F</span><span>G</span><span>H</span>
+                    </div>
+                    <div id="chessboard"></div>
+                    <div class="coordinates-bottom">
+                        <span>A</span><span>B</span><span>C</span><span>D</span>
+                        <span>E</span><span>F</span><span>G</span><span>H</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-panel">
+                <div class="panel">
+                    <h2>[ S Y S T E M   I N F O ]</h2>
+                    <div class="info-item">MODE: Player vs Player</div>
+                    <div class="info-item">TURN: White</div>
+                    <div class="info-item status">STATUS: Ready</div>
+                    <div class="info-item">MOVES: 0</div>
+                </div>
+                
+                <div class="panel">
+                    <h2>[ M O V E   L O G ]</h2>
+                    <div class="move-history">
+                        <div class="move-item">1. e4 e5</div>
+                        <div class="move-item">2. Nf3 Nc6</div>
+                        <div class="move-item">3. Bc4 Bc5</div>
+                        <div class="move-item">// Italian Game</div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <h2>[ C O N T R O L S ]</h2>
+                    <button class="btn">⚡ NEW GAME (PvP)</button>
+                    <button class="btn">🤖 VS COMPUTER</button>
+                    <button class="btn">↻ RESET BOARD</button>
+                    <button class="btn danger">✕ EXIT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Create chess board
+        const board = document.getElementById('chessboard');
+        const startPosition = [
+            ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+            ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '♙', '', '', ''],
+            ['', '', '♘', '', '', '', '', ''],
+            ['♙', '♙', '♙', '♙', '', '♙', '♙', '♙'],
+            ['♖', '♘', '♗', '♕', '♔', '♗', '', '♖']
+        ];
+        
+        for (let row = 0; row < 8; row++) {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'board-row';
+            
+            // Left coordinate
+            const leftCoord = document.createElement('div');
+            leftCoord.className = 'coord-left';
+            leftCoord.textContent = 8 - row;
+            rowDiv.appendChild(leftCoord);
+            
+            const boardDiv = document.createElement('div');
+            boardDiv.className = 'board';
+            
+            for (let col = 0; col < 8; col++) {
+                const square = document.createElement('div');
+                square.className = `square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+                
+                const piece = startPosition[row][col];
+                if (piece) {
+                    const pieceSpan = document.createElement('span');
+                    pieceSpan.className = `piece ${row < 2 ? 'black' : 'white'}`;
+                    pieceSpan.textContent = piece;
+                    square.appendChild(pieceSpan);
+                }
+                
+                // Highlight last move example
+                if ((row === 6 && col === 4) || (row === 4 && col === 4)) {
+                    square.classList.add('last-move');
+                }
+                
+                boardDiv.appendChild(square);
+            }
+            
+            rowDiv.appendChild(boardDiv);
+            
+            // Right coordinate
+            const rightCoord = document.createElement('div');
+            rightCoord.className = 'coord-right';
+            rightCoord.textContent = 8 - row;
+            rowDiv.appendChild(rightCoord);
+            
+            board.appendChild(rowDiv);
+        }
+        
+        // Add click interactions
+        document.querySelectorAll('.square').forEach(square => {
+            square.addEventListener('click', function() {
+                // Remove previous selections
+                document.querySelectorAll('.square.selected').forEach(s => {
+                    if (!s.classList.contains('last-move')) {
+                        s.classList.remove('selected');
+                    }
+                });
+                
+                // Add selection to clicked square
+                if (!this.classList.contains('last-move')) {
+                    this.classList.toggle('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
