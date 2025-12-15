@@ -3,7 +3,7 @@
 
 # Path to Stockfish executable
 # Download from: https://stockfishchess.org/download/
-# 
+#
 # Examples:
 # Windows: "C:/Users/YourName/Downloads/stockfish/stockfish-windows-x86-64.exe"
 # Mac (Homebrew): "/opt/homebrew/bin/stockfish"
