@@ -455,10 +455,10 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 - [ ] User accounts and rating system (deferred - requires database)
 
 ### Phase 4: Polish ✅ (Completed)
-- [ ] Graphical UI (web or desktop) (deferred - large scope)
+- [x] Graphical UI - Cyberpunk-themed tkinter GUI (desktop)
 - [x] Multiple board display themes
 - [x] Performance optimization
-- [ ] Mobile responsiveness (deferred - requires GUI)
+- [ ] Mobile responsiveness (deferred - requires mobile GUI)
 - [x] Comprehensive automated testing
 - [x] Documentation improvements
 - [x] Build system and distribution artifacts
@@ -468,6 +468,14 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 For a detailed history of changes, see [CHANGELOG.md](CHANGELOG.md).
 
 ### Recent Changes
+
+#### v0.5.0 (2025-12-15) - Cyberpunk GUI
+- ✅ Added Cyberpunk GUI - Desktop graphical interface with neon theme
+- ✅ Click-to-move interface with visual feedback
+- ✅ Unified launcher for choosing between GUI and CLI
+- ✅ Real-time game status and move history display
+- ✅ Support for Player vs Player and Player vs Computer modes
+- ✅ Comprehensive GUI user guide (CYBERPUNK_GUI_GUIDE.md)
 
 #### v0.4.1 (2025-12-14)
 - ✅ Added board display themes (ASCII, Unicode, Borders)
@@ -504,6 +512,6 @@ For support, questions, or feedback:
 
 ---
 
-**Status**: 🎉 Phase 3 & 4 Complete - Advanced Features Implemented!
+**Status**: 🎉 Phase 3 & 4 Complete - Advanced Features + Cyberpunk GUI!
 
 *Last Updated: December 15, 2025*
