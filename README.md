@@ -1,9 +1,9 @@
 # CC - Cyberchess
 
-[![CI](https://github.com/GizzZmo/CC/workflows/CI/badge.svg)](https://github.com/GizzZmo/CC/actions/workflows/ci.yml)
-[![Code Quality](https://github.com/GizzZmo/CC/workflows/Code%20Quality/badge.svg)](https://github.com/GizzZmo/CC/actions/workflows/code-quality.yml)
-[![Build](https://github.com/GizzZmo/CC/workflows/Build/badge.svg)](https://github.com/GizzZmo/CC/actions/workflows/build.yml)
-[![Documentation](https://github.com/GizzZmo/CC/workflows/Documentation/badge.svg)](https://github.com/GizzZmo/CC/actions/workflows/documentation.yml)
+[![CI](https://github.com/GizzZmo/CC/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/GizzZmo/CC/actions/workflows/ci.yml)
+[![Code Quality](https://github.com/GizzZmo/CC/actions/workflows/code-quality.yml/badge.svg?branch=main)](https://github.com/GizzZmo/CC/actions/workflows/code-quality.yml)
+[![Build](https://github.com/GizzZmo/CC/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/GizzZmo/CC/actions/workflows/build.yml)
+[![Documentation](https://github.com/GizzZmo/CC/actions/workflows/documentation.yml/badge.svg?branch=main)](https://github.com/GizzZmo/CC/actions/workflows/documentation.yml)
 
 ## Table of Contents
 - [Overview](#overview)
