@@ -1,0 +1,59 @@
+name: Greetings
+
+on:
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  greeting:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    
+    steps:
+    - name: Greet first-time issue creator
+      if: github.event_name == 'issues'
+      uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        issue-message: |
+          👋 Welcome to Cyberchess! Thank you for opening your first issue!
+          
+          We appreciate your contribution to making this project better. A maintainer will review your issue soon.
+          
+          In the meantime, please make sure:
+          - [ ] Your issue title is clear and descriptive
+          - [ ] You've provided enough context and details
+          - [ ] You've checked if a similar issue already exists
+          
+          If this is a bug report, please include:
+          - Steps to reproduce the issue
+          - Expected behavior
+          - Actual behavior
+          - Python version and OS
+          
+          Thank you for contributing! 🎉
+    
+    - name: Greet first-time PR creator
+      if: github.event_name == 'pull_request_target'
+      uses: actions/first-interaction@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        pr-message: |
+          👋 Welcome to Cyberchess! Thank you for your first pull request!
+          
+          We're excited to review your contribution! A maintainer will look at your PR soon.
+          
+          Please ensure:
+          - [ ] Your PR has a clear, descriptive title
+          - [ ] You've provided a detailed description of your changes
+          - [ ] All tests pass
+          - [ ] Your code follows the project's style guidelines
+          - [ ] You've updated documentation if needed
+          
+          See our [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+          
+          Thank you for contributing! 🚀

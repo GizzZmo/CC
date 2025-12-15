@@ -1,0 +1,89 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  pr-checks:
+    name: PR Validation Checks
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    permissions:
+      contents: read
+      pull-requests: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Check PR title
+      uses: amannn/action-semantic-pull-request@v5
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        types: |
+          feat
+          fix
+          docs
+          style
+          refactor
+          test
+          chore
+          ci
+      continue-on-error: true
+    
+    - name: Check for added/modified Python files
+      id: changed-files
+      uses: tj-actions/changed-files@v41
+      with:
+        files: |
+          **.py
+    
+    - name: Run tests on changed files
+      if: steps.changed-files.outputs.any_changed == 'true'
+      run: |
+        echo "Changed Python files: ${{ steps.changed-files.outputs.all_changed_files }}"
+        python test_features.py
+    
+    - name: Check code complexity
+      if: steps.changed-files.outputs.any_changed == 'true'
+      run: |
+        pip install radon
+        radon cc . -a -nb
+      continue-on-error: true
+    
+    - name: Check test coverage
+      if: steps.changed-files.outputs.any_changed == 'true'
+      run: |
+        pip install coverage
+        coverage run test_features.py
+        coverage report
+      continue-on-error: true
+    
+    - name: Verify no merge conflicts
+      run: |
+        git merge-base HEAD origin/${{ github.base_ref }}
+    
+    - name: PR Summary
+      run: |
+        echo "## PR Validation Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Base Branch:** ${{ github.base_ref }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Head Branch:** ${{ github.head_ref }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Changed Python Files:** ${{ steps.changed-files.outputs.all_changed_files_count }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "All validation checks completed!" >> $GITHUB_STEP_SUMMARY

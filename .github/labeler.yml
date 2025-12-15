@@ -1,0 +1,33 @@
+# Automatically label PRs based on changed files
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: ['*.md', 'docs/**/*']
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file: ['test_*.py', '**/test_*.py', 'tests/**/*']
+
+python:
+  - changed-files:
+    - any-glob-to-any-file: ['*.py']
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file: ['.github/**/*']
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file: ['requirements.txt', 'setup.py', 'setup.cfg']
+
+game-logic:
+  - changed-files:
+    - any-glob-to-any-file: ['game_modes.py', 'cyberchess.py', 'play.py']
+
+features:
+  - changed-files:
+    - any-glob-to-any-file: ['opening_book.py', 'puzzles.py']
+
+build:
+  - changed-files:
+    - any-glob-to-any-file: ['build.py']

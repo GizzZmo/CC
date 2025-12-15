@@ -1,0 +1,33 @@
+# Code owners for automatic PR review assignment
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo
+*       @GizzZmo
+
+# Python source files
+*.py    @GizzZmo
+
+# Documentation
+*.md    @GizzZmo
+docs/   @GizzZmo
+
+# CI/CD workflows
+/.github/       @GizzZmo
+
+# Dependencies
+requirements.txt        @GizzZmo
+
+# Build scripts
+build.py        @GizzZmo
+
+# Game logic
+game_modes.py           @GizzZmo
+cyberchess.py          @GizzZmo
+play.py                @GizzZmo
+
+# Features
+opening_book.py        @GizzZmo
+puzzles.py             @GizzZmo
+
+# Tests
+test_*.py              @GizzZmo
