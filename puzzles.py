@@ -3,10 +3,17 @@ Chess puzzles and training module for Cyberchess.
 Provides tactical puzzles for players to solve.
 """
 
+import sys
 import chess
 import chess.engine
 from typing import List, Dict, Optional
 import os
+
+# Configure stdout/stderr to use UTF-8 encoding on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 class ChessPuzzle:

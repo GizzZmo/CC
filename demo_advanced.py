@@ -4,10 +4,17 @@ Advanced features demonstration for Cyberchess Phase 3 & 4.
 Showcases new features: time controls, opening book, puzzles, and analysis.
 """
 
+import sys
 import chess
 from game_modes import ChessGame
 from opening_book import OpeningBook
 from puzzles import PuzzleTrainer
+
+# Configure stdout/stderr to use UTF-8 encoding on Windows
+if sys.stdout.encoding != 'utf-8':
+    sys.stdout.reconfigure(encoding='utf-8')
+if sys.stderr.encoding != 'utf-8':
+    sys.stderr.reconfigure(encoding='utf-8')
 
 
 def demo_time_controls():
