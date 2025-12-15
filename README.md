@@ -116,7 +116,7 @@ CC/
 └── .git/                 # Git repository metadata
 ```
 
-*Updated: December 2025 - Phase 3 & 4 Complete*
+*Updated: December 15, 2025 - Phase 3 & 4 Complete*
 
 ## Getting Started
 
@@ -413,12 +413,19 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 For a detailed history of changes, see [CHANGELOG.md](CHANGELOG.md).
 
-### Recent Changes (v0.4.0 - Phase 3 & 4 Complete)
+### Recent Changes
+
+#### v0.4.1 (2025-12-14)
+- ✅ Added board display themes (ASCII, Unicode, Borders)
+- ✅ Theme selection integrated into all game modes
+- ✅ Dynamic theme switching during games
+- ✅ Theme configuration in config template
+
+#### v0.4.0 (2025-12-13) - Phase 3 & 4 Complete
 - ✅ Added post-game engine analysis with move evaluations
 - ✅ Added time controls (Blitz, Rapid, Classical, Custom)
 - ✅ Added opening book with 12+ popular openings
 - ✅ Added chess puzzle trainer with 8+ tactical puzzles
-- ✅ Added board display themes (ASCII, Unicode, Borders)
 - ✅ Added comprehensive automated test suite
 - ✅ Added build system for creating distribution packages
 - ✅ Enhanced documentation with installation guide
@@ -445,4 +452,4 @@ For support, questions, or feedback:
 
 **Status**: 🎉 Phase 3 & 4 Complete - Advanced Features Implemented!
 
-*Last Updated: December 2025*
+*Last Updated: December 15, 2025*
