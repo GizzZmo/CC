@@ -468,18 +468,20 @@ class CyberpunkChessGUI:
                 self._update_board()
         else:
             # Try to make a move
-            move = None
-            for legal_move in self.legal_moves:
-                if legal_move.to_square == square:
-                    move = legal_move
-                    break
+            # Find all legal moves to the clicked square
+            possible_moves = [m for m in self.legal_moves if m.to_square == square]
             
-            if move:
-                # Handle pawn promotion
-                if move.promotion is None and self.board.piece_at(self.selected_square).piece_type == chess.PAWN:
-                    if chess.square_rank(square) in [0, 7]:
-                        # Default to queen promotion for simplicity
-                        move = chess.Move(self.selected_square, square, promotion=chess.QUEEN)
+            if possible_moves:
+                # If there are multiple moves (e.g., different promotions), default to queen
+                move = None
+                for m in possible_moves:
+                    if m.promotion == chess.QUEEN or m.promotion is None:
+                        move = m
+                        break
+                
+                # If no queen promotion found, just take the first move
+                if move is None:
+                    move = possible_moves[0]
                 
                 self._make_move(move)
             
