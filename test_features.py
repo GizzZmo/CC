@@ -4,11 +4,13 @@ Test suite for Cyberchess Phase 3 and Phase 4 features.
 This file tests the new features added in advanced phases.
 """
 
-import chess
-import chess.engine
 import os
 import sys
-from game_modes import ChessGame, PlayerVsPlayerGame, PlayerVsComputerGame
+
+import chess
+import chess.engine
+
+from game_modes import ChessGame, PlayerVsComputerGame, PlayerVsPlayerGame
 
 # Configure stdout/stderr to use UTF-8 encoding on Windows
 if sys.stdout.encoding != "utf-8":

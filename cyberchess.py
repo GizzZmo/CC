@@ -1,9 +1,10 @@
+import datetime
+import random
+
 import chess
 import chess.engine
 import chess.pgn
 import google.generativeai as genai
-import random
-import datetime
 
 # --- CONFIGURATION ---
 # REPLACE THIS with the path to your downloaded stockfish file

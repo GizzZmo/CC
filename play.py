@@ -4,12 +4,14 @@ Cyberchess - Main Game Launcher
 Provides a menu to select different game modes.
 """
 
+import os
 import sys
+
 import chess
-from game_modes import PlayerVsPlayerGame, PlayerVsComputerGame, AIvsAIGame
+
+from game_modes import AIvsAIGame, PlayerVsComputerGame, PlayerVsPlayerGame
 from opening_book import OpeningBook
 from puzzles import PuzzleTrainer
-import os
 
 # Configure stdout/stderr to use UTF-8 encoding on Windows
 if sys.stdout.encoding != "utf-8":

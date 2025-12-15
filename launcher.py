@@ -4,8 +4,8 @@ Cyberchess Launcher
 Choose between CLI and Cyberpunk GUI interfaces.
 """
 
-import sys
 import os
+import sys
 
 
 def display_launcher_menu():

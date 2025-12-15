@@ -3,10 +3,11 @@ Opening book module for Cyberchess.
 Provides common chess openings and their variations.
 """
 
-import sys
-import chess
 import random
-from typing import Optional, List, Dict, Tuple
+import sys
+from typing import Dict, List, Optional, Tuple
+
+import chess
 
 # Configure stdout/stderr to use UTF-8 encoding on Windows
 if sys.stdout.encoding != "utf-8":

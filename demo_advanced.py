@@ -5,7 +5,9 @@ Showcases new features: time controls, opening book, puzzles, and analysis.
 """
 
 import sys
+
 import chess
+
 from game_modes import ChessGame
 from opening_book import OpeningBook
 from puzzles import PuzzleTrainer

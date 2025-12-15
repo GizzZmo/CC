@@ -5,6 +5,7 @@ This demonstrates the features implemented in Phase 2.
 """
 
 import sys
+
 import chess
 import chess.pgn
 

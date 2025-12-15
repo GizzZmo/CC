@@ -4,15 +4,17 @@ Cyberpunk GUI for Cyberchess
 A futuristic, neon-themed graphical interface for chess.
 """
 
-import tkinter as tk
-from tkinter import messagebox, font as tkfont
-import chess
-import chess.engine
-import chess.pgn
-from typing import Optional, Tuple
 import datetime
 import os
 import sys
+import tkinter as tk
+from tkinter import font as tkfont
+from tkinter import messagebox
+from typing import Optional, Tuple
+
+import chess
+import chess.engine
+import chess.pgn
 
 
 class CyberpunkChessGUI:

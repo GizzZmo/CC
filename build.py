@@ -4,11 +4,11 @@ Build script for Cyberchess.
 Creates distributable packages and documentation.
 """
 
-import os
-import sys
-import shutil
-import zipfile
 import datetime
+import os
+import shutil
+import sys
+import zipfile
 from pathlib import Path
 
 # Configure stdout/stderr to use UTF-8 encoding on Windows
