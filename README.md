@@ -77,7 +77,14 @@ To create an accessible, feature-rich chess platform that serves players of all 
   - ✅ Unicode theme (chess symbols) - Prettier, requires Unicode support
   - ✅ Borders theme (Unicode with borders and coordinates) - Most detailed
   - ✅ Theme selection available in all game modes
-- **Interactive UI**: Console-based with clear board visualization
+- **Interactive UI**: 
+  - ✅ Console-based interface with clear board visualization
+  - ✅ **Cyberpunk GUI** - Neon-themed graphical interface with tkinter
+    - Futuristic neon color scheme (cyan, magenta, yellow, green)
+    - Glowing effects and animated backgrounds
+    - Click-to-move interface
+    - Real-time game status and move history
+    - Player vs Player and Player vs Computer modes
 - **Example Assets**: Famous chess games collection for learning
 - **Testing**: Comprehensive automated test suite
 - **Build System**: Automated packaging and distribution
@@ -87,8 +94,8 @@ To create an accessible, feature-rich chess platform that serves players of all 
   - Online multiplayer support (requires server infrastructure)
   - User accounts and rating system (requires database)
 - **UI Enhancements**:
-  - Graphical UI - web or desktop (large scope project)
   - Mobile responsiveness
+  - Additional GUI themes and customization options
 
 ## Project Structure
 
@@ -97,9 +104,12 @@ CC/
 ├── README.md              # This file - comprehensive project documentation
 ├── CHANGELOG.md           # Version history and change log
 ├── CONTRIBUTING.md        # Contribution guidelines
+├── launcher.py            # Main launcher - choose between GUI and CLI
+├── cyberpunk_gui.py       # Cyberpunk GUI - neon-themed graphical interface
+├── gui_preview.html       # GUI preview/demo (HTML version)
 ├── cyberchess.py          # Legacy chess game (Stockfish vs Gemini)
 ├── game_modes.py          # Game mode implementations (PvP, PvC, AI vs AI)
-├── play.py                # Main interactive game launcher
+├── play.py                # Classic CLI interactive game launcher
 ├── demo.py                # Feature demonstration script
 ├── opening_book.py        # Opening book database and explorer
 ├── puzzles.py             # Chess puzzle trainer
@@ -188,7 +198,51 @@ You can configure Cyberchess in multiple ways:
 
 ## Usage
 
-### Interactive Game Launcher
+### Quick Start - Choose Your Interface
+
+Cyberchess offers two interfaces:
+
+**Option 1: Main Launcher (Recommended)**
+```bash
+python launcher.py
+```
+This presents a menu to choose between:
+- 💀 **Cyberpunk GUI** - Neon-themed graphical interface
+- 🖥️  **Classic CLI** - Traditional console interface
+
+**Option 2: Direct Launch**
+```bash
+# Launch Cyberpunk GUI directly
+python cyberpunk_gui.py
+
+# Launch Classic CLI directly
+python play.py
+```
+
+### Cyberpunk GUI
+
+The Cyberpunk GUI provides a futuristic, neon-themed graphical chess experience:
+
+![Cyberpunk GUI](https://github.com/user-attachments/assets/23fb2e36-1db9-4d45-bf07-698d3d677e27)
+
+**Features:**
+- 🎨 Neon color scheme with glowing effects (cyan, magenta, yellow, green)
+- 🖱️ Click-to-move interface - click a piece then click destination
+- 📊 Real-time game status and move history
+- ⚡ Animated background with cyberpunk aesthetics
+- 🤖 Player vs Player and Player vs Computer modes
+- 🎮 Easy-to-use control buttons
+
+**Controls:**
+- Click a piece to select it (legal moves will be highlighted)
+- Click a highlighted square to move
+- Use buttons on the right panel to start games or reset
+
+**Requirements:** 
+- Python's tkinter library (usually comes pre-installed)
+- Optional: Stockfish engine for Player vs Computer mode
+
+### Classic CLI - Interactive Game Launcher
 
 Run the main interactive launcher to choose from different game modes:
 
