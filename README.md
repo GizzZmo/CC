@@ -5,6 +5,10 @@
 [![Build](https://github.com/GizzZmo/CC/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/GizzZmo/CC/actions/workflows/build.yml)
 [![Documentation](https://github.com/GizzZmo/CC/actions/workflows/documentation.yml/badge.svg?branch=main&event=push)](https://github.com/GizzZmo/CC/actions/workflows/documentation.yml)
 
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-supported-E95420?logo=ubuntu&logoColor=white)](https://github.com/GizzZmo/CC/actions/workflows/matrix-tests.yml)
+[![macOS](https://img.shields.io/badge/macOS-supported-000000?logo=apple&logoColor=white)](https://github.com/GizzZmo/CC/actions/workflows/matrix-tests.yml)
+[![Windows](https://img.shields.io/badge/Windows-supported-0078D6?logo=windows&logoColor=white)](https://github.com/GizzZmo/CC/actions/workflows/matrix-tests.yml)
+
 ## Table of Contents
 - [Overview](#overview)
 - [Features](#features)
