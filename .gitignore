@@ -40,6 +40,10 @@ pvp_games.pgn
 pvc_games.pgn
 ai_vs_ai_games.pgn
 
+# Database files
+cyberchess.db
+*.db
+
 # Configuration
 config.py
 
