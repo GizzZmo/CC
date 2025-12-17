@@ -10,7 +10,7 @@ import random
 import sys
 import tkinter as tk
 from tkinter import font as tkfont
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 from typing import Optional, Tuple
 
 import chess
@@ -258,7 +258,7 @@ class CyberpunkChessGUI:
         info_frame.grid(row=0, column=0, sticky="nsew", pady=5)
         
         # Configure grid
-        info_frame.grid_rowconfigure(6, weight=1)  # Move history expands
+        info_frame.grid_rowconfigure(7, weight=1)  # Move history container expands
         info_frame.grid_columnconfigure(0, weight=1)
 
         # Title
@@ -985,21 +985,20 @@ class CyberpunkChessGUI:
             except ValueError:
                 self.stockfish_time_limit = 0.5
             
-            messagebox.showinfo("Settings", "Settings saved successfully!")
+            # Update active engines with new skill level if they exist
+            if self.engine:
+                try:
+                    self.engine.configure({"Skill Level": self.stockfish_skill_level})
+                except:
+                    pass
+            if self.engine2:
+                try:
+                    self.engine2.configure({"Skill Level": self.stockfish_skill_level})
+                except:
+                    pass
+            
+            messagebox.showinfo("Settings", "Settings saved successfully!\n\nNote: New game modes will appear after starting a new game.")
             settings_window.destroy()
-            
-            # Recreate control panel to show/hide AI buttons
-            for widget in self.master.winfo_children():
-                if isinstance(widget, tk.Frame):
-                    for child in widget.winfo_children():
-                        if isinstance(child, tk.Frame):
-                            for grandchild in child.winfo_children():
-                                if isinstance(grandchild, tk.Frame):
-                                    # Find the right panel
-                                    pass
-            
-            # Note: For simplicity, we'll just ask user to restart
-            messagebox.showinfo("Settings", "Please restart the application for some changes to take effect.")
         
         save_btn_config = {
             "font": ("Courier New", 10, "bold"),
