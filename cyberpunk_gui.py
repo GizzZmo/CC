@@ -26,6 +26,10 @@ except ImportError:
 
 class CyberpunkChessGUI:
     """Cyberpunk-themed chess GUI."""
+    
+    # Placeholder values for configuration
+    PLACEHOLDER_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
+    PLACEHOLDER_STOCKFISH_PATH = "YOUR_STOCKFISH_PATH_HERE"
 
     # Cyberpunk color scheme
     COLORS = {
@@ -95,6 +99,10 @@ class CyberpunkChessGUI:
 
         self._setup_ui()
         self._update_board()
+    
+    def _is_api_key_valid(self) -> bool:
+        """Check if Gemini API key is configured."""
+        return self.gemini_api_key and self.gemini_api_key != self.PLACEHOLDER_API_KEY
 
     def _setup_ui(self):
         """Setup the cyberpunk UI."""
@@ -688,7 +696,7 @@ class CyberpunkChessGUI:
             messagebox.showerror("Error", "Gemini library not available!")
             return
         
-        if not self.gemini_api_key or self.gemini_api_key == "YOUR_GEMINI_API_KEY_HERE":
+        if not self._is_api_key_valid():
             messagebox.showerror("Error", "Gemini API key not configured! Please set it in Settings.")
             return
 
@@ -719,7 +727,7 @@ class CyberpunkChessGUI:
             messagebox.showerror("Error", "Gemini library not available!")
             return
         
-        if not self.gemini_api_key or self.gemini_api_key == "YOUR_GEMINI_API_KEY_HERE":
+        if not self._is_api_key_valid():
             messagebox.showerror("Error", "Gemini API key not configured! Please set it in Settings.")
             return
 
@@ -989,12 +997,12 @@ class CyberpunkChessGUI:
             if self.engine:
                 try:
                     self.engine.configure({"Skill Level": self.stockfish_skill_level})
-                except:
+                except Exception:
                     pass
             if self.engine2:
                 try:
                     self.engine2.configure({"Skill Level": self.stockfish_skill_level})
-                except:
+                except Exception:
                     pass
             
             messagebox.showinfo("Settings", "Settings saved successfully!\n\nNote: New game modes will appear after starting a new game.")
@@ -1034,12 +1042,12 @@ class CyberpunkChessGUI:
         if self.engine:
             try:
                 self.engine.quit()
-            except:
+            except Exception:
                 pass
         if self.engine2:
             try:
                 self.engine2.quit()
-            except:
+            except Exception:
                 pass
 
 
