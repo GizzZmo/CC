@@ -500,7 +500,9 @@ def main():
 
     # Debug mode controlled by environment variable (default: False for security)
     debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
-    socketio.run(app, host="0.0.0.0", port=5000, debug=debug_mode)
+    # Bind to all interfaces only in debug mode, otherwise bind to localhost for security
+    host = "0.0.0.0" if debug_mode else "127.0.0.1"  # nosec B104
+    socketio.run(app, host=host, port=5000, debug=debug_mode)
 
 
 if __name__ == "__main__":
