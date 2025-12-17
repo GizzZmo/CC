@@ -60,7 +60,11 @@ def register():
     user_id = db.create_user(username, password, email)
     if user_id:
         return jsonify(
-            {"success": True, "user_id": user_id, "message": "User created successfully"}
+            {
+                "success": True,
+                "user_id": user_id,
+                "message": "User created successfully",
+            }
         )
     else:
         return jsonify({"error": "Username or email already exists"}), 409
@@ -142,9 +146,10 @@ def join_matchmaking():
         if opponent:
             # Create a game session
             session_id = secrets.token_urlsafe(16)
-            
+
             # Randomly assign colors
             import random
+
             if random.random() < 0.5:
                 white_id, black_id = user_id, opponent["user_id"]
             else:
@@ -167,7 +172,9 @@ def join_matchmaking():
                 }
             )
         else:
-            return jsonify({"success": True, "matched": False, "message": "Waiting for opponent"})
+            return jsonify(
+                {"success": True, "matched": False, "message": "Waiting for opponent"}
+            )
     else:
         return jsonify({"error": "Already in queue"}), 409
 
@@ -286,8 +293,9 @@ def handle_make_move(data):
 
     # Verify it's the player's turn
     board = chess.Board(game["current_fen"])
-    if (board.turn == chess.WHITE and user_id != game["white_player_id"]) or \
-       (board.turn == chess.BLACK and user_id != game["black_player_id"]):
+    if (board.turn == chess.WHITE and user_id != game["white_player_id"]) or (
+        board.turn == chess.BLACK and user_id != game["black_player_id"]
+    ):
         emit("error", {"message": "Not your turn"})
         return
 
@@ -334,13 +342,13 @@ def handle_make_move(data):
         # If game is over, save to database and update ratings
         if board.is_game_over():
             result = board.result()
-            
+
             # Create PGN
             game_pgn = chess.pgn.Game()
             game_pgn.headers["Event"] = "Cyberchess Online Game"
             game_pgn.headers["Date"] = datetime.now().strftime("%Y.%m.%d")
             game_pgn.headers["Result"] = result
-            
+
             # Rebuild game from moves
             node = game_pgn
             temp_board = chess.Board()
@@ -348,7 +356,7 @@ def handle_make_move(data):
                 move = chess.Move.from_uci(uci_move)
                 node = node.add_variation(move)
                 temp_board.push(move)
-            
+
             pgn_string = str(game_pgn)
 
             # Get player ratings
@@ -461,7 +469,7 @@ def handle_resign(data):
     game_pgn.headers["Date"] = datetime.now().strftime("%Y.%m.%d")
     game_pgn.headers["Result"] = result
     game_pgn.headers["Termination"] = "resignation"
-    
+
     pgn_string = str(game_pgn)
 
     # Record the game
@@ -489,7 +497,7 @@ def main():
     print(f"Mobile interface: http://localhost:5000")
     print(f"API endpoint: http://localhost:5000/api")
     print("=" * 60)
-    
+
     # Debug mode controlled by environment variable (default: False for security)
     debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
     socketio.run(app, host="0.0.0.0", port=5000, debug=debug_mode)

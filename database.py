@@ -21,7 +21,7 @@ class ChessDatabase:
     def connect(self):
         """
         Connect to the database.
-        
+
         Note: check_same_thread=False is used for Flask compatibility.
         For production, consider using connection pooling or ensuring
         proper synchronization with locks when sharing connections.
@@ -121,14 +121,14 @@ class ChessDatabase:
     def hash_password(self, password: str) -> str:
         """
         Hash a password using SHA-256.
-        
+
         NOTE: For production use, consider upgrading to bcrypt, scrypt, or argon2
         for better security against rainbow table attacks:
-        
+
         Example with bcrypt:
             import bcrypt
             return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
-        
+
         Current implementation uses SHA-256 for simplicity in development.
         """
         return hashlib.sha256(password.encode()).hexdigest()
@@ -273,9 +273,7 @@ class ChessDatabase:
         conn.commit()
         return game_id
 
-    def get_user_games(
-        self, user_id: int, limit: int = 10
-    ) -> List[Dict]:
+    def get_user_games(self, user_id: int, limit: int = 10) -> List[Dict]:
         """Get recent games for a user."""
         conn = self.connect()
         cursor = conn.cursor()
@@ -320,13 +318,13 @@ class ChessDatabase:
     ) -> int:
         """
         Calculate new Elo rating after a game.
-        
+
         Args:
             player_rating: Current rating of the player
             opponent_rating: Current rating of the opponent
             score: 1.0 for win, 0.5 for draw, 0.0 for loss
             k_factor: K-factor for Elo calculation (default 32)
-        
+
         Returns:
             New rating for the player
         """
@@ -365,9 +363,7 @@ class ChessDatabase:
         cursor = conn.cursor()
 
         # Get the user's queue entry
-        cursor.execute(
-            "SELECT * FROM matchmaking_queue WHERE user_id = ?", (user_id,)
-        )
+        cursor.execute("SELECT * FROM matchmaking_queue WHERE user_id = ?", (user_id,))
         user_entry = cursor.fetchone()
 
         if not user_entry:
@@ -427,14 +423,17 @@ class ChessDatabase:
         conn = self.connect()
         cursor = conn.cursor()
 
-        cursor.execute(
-            "SELECT * FROM active_games WHERE session_id = ?", (session_id,)
-        )
+        cursor.execute("SELECT * FROM active_games WHERE session_id = ?", (session_id,))
         row = cursor.fetchone()
         return dict(row) if row else None
 
     def update_active_game(
-        self, session_id: str, fen: str, move_history: str, white_time: float, black_time: float
+        self,
+        session_id: str,
+        fen: str,
+        move_history: str,
+        white_time: float,
+        black_time: float,
     ):
         """Update an active game's state."""
         conn = self.connect()

@@ -19,24 +19,24 @@ class MultiplayerClient:
         self.server_url = server_url
         self.api_url = f"{server_url}/api"
         self.sio = socketio.Client()
-        
+
         self.user_id = None
         self.username = None
         self.session_token = None
         self.game_session_id = None
         self.player_color = None
-        
+
         # Callbacks
         self.on_move_callback: Optional[Callable] = None
         self.on_game_over_callback: Optional[Callable] = None
         self.on_error_callback: Optional[Callable] = None
-        
+
         # Setup event handlers
         self._setup_handlers()
 
     def _setup_handlers(self):
         """Setup WebSocket event handlers."""
-        
+
         @self.sio.on("connected")
         def on_connected(data):
             print(f"✅ {data['message']}")
@@ -78,14 +78,16 @@ class MultiplayerClient:
         if self.sio.connected:
             self.sio.disconnect()
 
-    def register(self, username: str, password: str, email: Optional[str] = None) -> bool:
+    def register(
+        self, username: str, password: str, email: Optional[str] = None
+    ) -> bool:
         """Register a new user account."""
         try:
             response = requests.post(
                 f"{self.api_url}/register",
                 json={"username": username, "password": password, "email": email},
             )
-            
+
             if response.status_code == 200:
                 data = response.json()
                 print(f"✅ Registration successful! User ID: {data['user_id']}")
@@ -105,13 +107,15 @@ class MultiplayerClient:
                 f"{self.api_url}/login",
                 json={"username": username, "password": password},
             )
-            
+
             if response.status_code == 200:
                 data = response.json()
                 self.user_id = data["user_id"]
                 self.username = data["username"]
                 self.session_token = data["session_token"]
-                print(f"✅ Login successful! Welcome {self.username} (Rating: {data['rating']})")
+                print(
+                    f"✅ Login successful! Welcome {self.username} (Rating: {data['rating']})"
+                )
                 return True
             else:
                 error = response.json().get("error", "Unknown error")
@@ -125,11 +129,11 @@ class MultiplayerClient:
         """Get user profile information."""
         if user_id is None:
             user_id = self.user_id
-        
+
         if user_id is None:
             print("❌ Not logged in")
             return None
-        
+
         try:
             response = requests.get(f"{self.api_url}/user/{user_id}")
             if response.status_code == 200:
@@ -157,13 +161,15 @@ class MultiplayerClient:
         """Get user's game history."""
         if user_id is None:
             user_id = self.user_id
-        
+
         if user_id is None:
             print("❌ Not logged in")
             return []
-        
+
         try:
-            response = requests.get(f"{self.api_url}/user/{user_id}/games?limit={limit}")
+            response = requests.get(
+                f"{self.api_url}/user/{user_id}/games?limit={limit}"
+            )
             if response.status_code == 200:
                 return response.json()
             else:
@@ -177,13 +183,13 @@ class MultiplayerClient:
         if not self.user_id:
             print("❌ Not logged in")
             return None
-        
+
         try:
             response = requests.post(
                 f"{self.api_url}/matchmaking/join",
                 json={"user_id": self.user_id, "time_control": time_control},
             )
-            
+
             if response.status_code == 200:
                 data = response.json()
                 if data.get("matched"):
@@ -206,7 +212,7 @@ class MultiplayerClient:
         """Leave matchmaking queue."""
         if not self.user_id:
             return False
-        
+
         try:
             response = requests.post(
                 f"{self.api_url}/matchmaking/leave",
@@ -221,23 +227,29 @@ class MultiplayerClient:
         """Join a game session."""
         if session_id:
             self.game_session_id = session_id
-        
+
         if not self.game_session_id or not self.user_id:
             print("❌ No game session or not logged in")
             return
-        
-        self.sio.emit("join_game", {
-            "session_id": self.game_session_id,
-            "user_id": self.user_id,
-        })
+
+        self.sio.emit(
+            "join_game",
+            {
+                "session_id": self.game_session_id,
+                "user_id": self.user_id,
+            },
+        )
 
     def leave_game(self):
         """Leave the current game session."""
         if self.game_session_id and self.user_id:
-            self.sio.emit("leave_game", {
-                "session_id": self.game_session_id,
-                "user_id": self.user_id,
-            })
+            self.sio.emit(
+                "leave_game",
+                {
+                    "session_id": self.game_session_id,
+                    "user_id": self.user_id,
+                },
+            )
             self.game_session_id = None
             self.player_color = None
 
@@ -246,33 +258,39 @@ class MultiplayerClient:
         if not self.game_session_id or not self.user_id:
             print("❌ No active game session")
             return
-        
-        self.sio.emit("make_move", {
-            "session_id": self.game_session_id,
-            "user_id": self.user_id,
-            "move": move_uci,
-        })
+
+        self.sio.emit(
+            "make_move",
+            {
+                "session_id": self.game_session_id,
+                "user_id": self.user_id,
+                "move": move_uci,
+            },
+        )
 
     def resign(self):
         """Resign from the current game."""
         if not self.game_session_id or not self.user_id:
             print("❌ No active game session")
             return
-        
-        self.sio.emit("resign", {
-            "session_id": self.game_session_id,
-            "user_id": self.user_id,
-        })
+
+        self.sio.emit(
+            "resign",
+            {
+                "session_id": self.game_session_id,
+                "user_id": self.user_id,
+            },
+        )
 
     def get_game_state(self, session_id: Optional[str] = None) -> Optional[dict]:
         """Get the current state of a game."""
         if session_id is None:
             session_id = self.game_session_id
-        
+
         if not session_id:
             print("❌ No game session")
             return None
-        
+
         try:
             response = requests.get(f"{self.api_url}/game/{session_id}")
             if response.status_code == 200:
@@ -288,20 +306,20 @@ class MultiplayerClient:
 if __name__ == "__main__":
     # Create client
     client = MultiplayerClient()
-    
+
     # Connect to server
     if not client.connect():
         print("Failed to connect to server")
         exit(1)
-    
+
     # Example: Register or login
     username = input("Username: ")
     password = input("Password: ")
-    
+
     choice = input("(L)ogin or (R)egister? ").lower()
     if choice == "r":
         client.register(username, password)
-    
+
     if client.login(username, password):
         # Get profile
         profile = client.get_user_profile()
@@ -309,12 +327,12 @@ if __name__ == "__main__":
             print(f"\nProfile: {profile['username']}")
             print(f"Rating: {profile['rating']}")
             print(f"Games Played: {profile['games_played']}")
-        
+
         # Show leaderboard
         print("\n📊 Leaderboard:")
         for i, player in enumerate(client.get_leaderboard(), 1):
             print(f"{i}. {player['username']}: {player['rating']}")
-        
+
         # Join matchmaking
         if input("\nJoin matchmaking? (y/n): ").lower() == "y":
             match = client.join_matchmaking("blitz")
@@ -322,9 +340,9 @@ if __name__ == "__main__":
                 # Join the game
                 client.join_game()
                 print(f"Playing as {client.player_color}")
-                
+
                 # Game loop would go here
                 input("Press Enter to leave game...")
                 client.leave_game()
-    
+
     client.disconnect()
