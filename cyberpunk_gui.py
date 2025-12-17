@@ -19,6 +19,7 @@ import chess.pgn
 
 try:
     import google.generativeai as genai
+
     GEMINI_AVAILABLE = True
 except ImportError:
     GEMINI_AVAILABLE = False
@@ -26,7 +27,7 @@ except ImportError:
 
 class CyberpunkChessGUI:
     """Cyberpunk-themed chess GUI."""
-    
+
     # Placeholder values for configuration
     PLACEHOLDER_API_KEY = "YOUR_GEMINI_API_KEY_HERE"
     PLACEHOLDER_STOCKFISH_PATH = "YOUR_STOCKFISH_PATH_HERE"
@@ -67,7 +68,12 @@ class CyberpunkChessGUI:
         "k": "♚",
     }
 
-    def __init__(self, master, stockfish_path: Optional[str] = None, gemini_api_key: Optional[str] = None):
+    def __init__(
+        self,
+        master,
+        stockfish_path: Optional[str] = None,
+        gemini_api_key: Optional[str] = None,
+    ):
         self.master = master
         self.master.title("⚡ CYBERCHESS ⚡")
         self.master.configure(bg=self.COLORS["background"])
@@ -88,7 +94,7 @@ class CyberpunkChessGUI:
         self.engine2 = None  # For AI vs AI modes
         self.gemini_model = None
         self.computer_thinking = False
-        
+
         # Engine parameters
         self.stockfish_skill_level = 5
         self.stockfish_time_limit = 0.5
@@ -99,7 +105,7 @@ class CyberpunkChessGUI:
 
         self._setup_ui()
         self._update_board()
-    
+
     def _is_api_key_valid(self) -> bool:
         """Check if Gemini API key is configured."""
         return self.gemini_api_key and self.gemini_api_key != self.PLACEHOLDER_API_KEY
@@ -108,12 +114,12 @@ class CyberpunkChessGUI:
         """Setup the cyberpunk UI."""
         # Make window resizable
         self.master.resizable(True, True)
-        
+
         # Configure grid weights for responsive layout
         self.master.grid_rowconfigure(0, weight=0)  # Title
         self.master.grid_rowconfigure(1, weight=1)  # Main content
         self.master.grid_columnconfigure(0, weight=1)
-        
+
         # Title with neon glow effect
         title_frame = tk.Frame(self.master, bg=self.COLORS["background"])
         title_frame.grid(row=0, column=0, sticky="ew", pady=10)
@@ -139,7 +145,7 @@ class CyberpunkChessGUI:
         # Main container
         main_frame = tk.Frame(self.master, bg=self.COLORS["background"])
         main_frame.grid(row=1, column=0, sticky="nsew", padx=20, pady=10)
-        
+
         # Configure main frame grid
         main_frame.grid_rowconfigure(0, weight=1)
         main_frame.grid_columnconfigure(0, weight=1)  # Board
@@ -154,7 +160,7 @@ class CyberpunkChessGUI:
         # Right panel - Info and controls
         right_frame = tk.Frame(main_frame, bg=self.COLORS["background"])
         right_frame.grid(row=0, column=1, sticky="nsew", padx=10)
-        
+
         # Configure right frame grid
         right_frame.grid_rowconfigure(0, weight=1)  # Info panel
         right_frame.grid_rowconfigure(1, weight=0)  # Control panel
@@ -264,7 +270,7 @@ class CyberpunkChessGUI:
             highlightthickness=2,
         )
         info_frame.grid(row=0, column=0, sticky="nsew", pady=5)
-        
+
         # Configure grid
         info_frame.grid_rowconfigure(7, weight=1)  # Move history container expands
         info_frame.grid_columnconfigure(0, weight=1)
@@ -338,7 +344,7 @@ class CyberpunkChessGUI:
         # Scrollable move history
         history_container = tk.Frame(info_frame, bg=self.COLORS["background"])
         history_container.grid(row=7, column=0, sticky="nsew", padx=10, pady=(0, 10))
-        
+
         # Configure grid for history container
         history_container.grid_rowconfigure(0, weight=1)
         history_container.grid_columnconfigure(0, weight=1)
@@ -405,7 +411,7 @@ class CyberpunkChessGUI:
                 command=self._new_game_pvc,
                 **btn_config,
             ).pack(fill=tk.X, padx=10, pady=2)
-            
+
             # Stockfish vs Stockfish
             tk.Button(
                 control_frame,
@@ -424,7 +430,12 @@ class CyberpunkChessGUI:
             ).pack(fill=tk.X, padx=10, pady=2)
 
         # Stockfish vs Gemini button
-        if self.stockfish_path and os.path.exists(self.stockfish_path) and GEMINI_AVAILABLE and self.gemini_api_key:
+        if (
+            self.stockfish_path
+            and os.path.exists(self.stockfish_path)
+            and GEMINI_AVAILABLE
+            and self.gemini_api_key
+        ):
             tk.Button(
                 control_frame,
                 text="⚔️ STOCKFISH vs GEMINI",
@@ -434,10 +445,7 @@ class CyberpunkChessGUI:
 
         # Settings button
         tk.Button(
-            control_frame, 
-            text="⚙️ SETTINGS", 
-            command=self._show_settings,
-            **btn_config
+            control_frame, text="⚙️ SETTINGS", command=self._show_settings, **btn_config
         ).pack(fill=tk.X, padx=10, pady=2)
 
         # Reset button
@@ -658,7 +666,7 @@ class CyberpunkChessGUI:
         # If computer plays white, make first move
         if self.player_color == chess.BLACK:
             self.master.after(500, self._computer_move)
-    
+
     def _new_game_stockfish_vs_stockfish(self):
         """Start a new Stockfish vs Stockfish game."""
         if not self.stockfish_path or not os.path.exists(self.stockfish_path):
@@ -674,10 +682,10 @@ class CyberpunkChessGUI:
                 self.engine.quit()
             if self.engine2:
                 self.engine2.quit()
-            
+
             self.engine = chess.engine.SimpleEngine.popen_uci(self.stockfish_path)
             self.engine.configure({"Skill Level": self.stockfish_skill_level})
-            
+
             self.engine2 = chess.engine.SimpleEngine.popen_uci(self.stockfish_path)
             self.engine2.configure({"Skill Level": self.stockfish_skill_level})
         except Exception as e:
@@ -686,18 +694,20 @@ class CyberpunkChessGUI:
             return
 
         self._reset_game()
-        
+
         # Start the game
         self.master.after(500, self._ai_vs_ai_move)
-    
+
     def _new_game_gemini_vs_gemini(self):
         """Start a new Gemini vs Gemini game."""
         if not GEMINI_AVAILABLE:
             messagebox.showerror("Error", "Gemini library not available!")
             return
-        
+
         if not self._is_api_key_valid():
-            messagebox.showerror("Error", "Gemini API key not configured! Please set it in Settings.")
+            messagebox.showerror(
+                "Error", "Gemini API key not configured! Please set it in Settings."
+            )
             return
 
         self.game_mode = "gvg"
@@ -713,46 +723,53 @@ class CyberpunkChessGUI:
             return
 
         self._reset_game()
-        
+
         # Start the game
         self.master.after(500, self._ai_vs_ai_move)
-    
+
     def _new_game_stockfish_vs_gemini(self):
         """Start a new Stockfish vs Gemini game."""
         if not self.stockfish_path or not os.path.exists(self.stockfish_path):
             messagebox.showerror("Error", "Stockfish engine not found!")
             return
-        
+
         if not GEMINI_AVAILABLE:
             messagebox.showerror("Error", "Gemini library not available!")
             return
-        
+
         if not self._is_api_key_valid():
-            messagebox.showerror("Error", "Gemini API key not configured! Please set it in Settings.")
+            messagebox.showerror(
+                "Error", "Gemini API key not configured! Please set it in Settings."
+            )
             return
 
         # Ask which AI plays white
         response = messagebox.askyesno(
-            "Choose Colors", "Should Stockfish play White?\n\nYes = Stockfish White\nNo = Gemini White"
+            "Choose Colors",
+            "Should Stockfish play White?\n\nYes = Stockfish White\nNo = Gemini White",
         )
         stockfish_color = chess.WHITE if response else chess.BLACK
 
         self.game_mode = "svg"
         self.player_color = stockfish_color  # Store which color is Stockfish
-        
+
         if stockfish_color == chess.WHITE:
-            self.info_labels["mode"].config(text="MODE: Stockfish (White) vs Gemini (Black)")
+            self.info_labels["mode"].config(
+                text="MODE: Stockfish (White) vs Gemini (Black)"
+            )
         else:
-            self.info_labels["mode"].config(text="MODE: Gemini (White) vs Stockfish (Black)")
+            self.info_labels["mode"].config(
+                text="MODE: Gemini (White) vs Stockfish (Black)"
+            )
 
         # Initialize engines
         try:
             if self.engine:
                 self.engine.quit()
-            
+
             self.engine = chess.engine.SimpleEngine.popen_uci(self.stockfish_path)
             self.engine.configure({"Skill Level": self.stockfish_skill_level})
-            
+
             genai.configure(api_key=self.gemini_api_key)
             self.gemini_model = genai.GenerativeModel("gemini-1.5-flash")
         except Exception as e:
@@ -761,7 +778,7 @@ class CyberpunkChessGUI:
             return
 
         self._reset_game()
-        
+
         # Start the game
         self.master.after(500, self._ai_vs_ai_move)
 
@@ -774,14 +791,16 @@ class CyberpunkChessGUI:
         self._update_info()
 
         try:
-            result = self.engine.play(self.board, chess.engine.Limit(time=self.stockfish_time_limit))
+            result = self.engine.play(
+                self.board, chess.engine.Limit(time=self.stockfish_time_limit)
+            )
             self._make_move(result.move)
         except Exception as e:
             messagebox.showerror("Error", f"Computer move failed: {e}")
         finally:
             self.computer_thinking = False
             self._update_info()
-    
+
     def _ai_vs_ai_move(self):
         """Make an AI vs AI move."""
         if self.board.is_game_over():
@@ -792,45 +811,49 @@ class CyberpunkChessGUI:
 
         try:
             move = None
-            
+
             if self.game_mode == "cvc":
                 # Stockfish vs Stockfish
                 engine = self.engine if self.board.turn == chess.WHITE else self.engine2
-                result = engine.play(self.board, chess.engine.Limit(time=self.stockfish_time_limit))
+                result = engine.play(
+                    self.board, chess.engine.Limit(time=self.stockfish_time_limit)
+                )
                 move = result.move
-                
+
             elif self.game_mode == "gvg":
                 # Gemini vs Gemini
                 move = self._get_gemini_move()
-                
+
             elif self.game_mode == "svg":
                 # Stockfish vs Gemini
                 if self.board.turn == self.player_color:
                     # Stockfish's turn
-                    result = self.engine.play(self.board, chess.engine.Limit(time=self.stockfish_time_limit))
+                    result = self.engine.play(
+                        self.board, chess.engine.Limit(time=self.stockfish_time_limit)
+                    )
                     move = result.move
                 else:
                     # Gemini's turn
                     move = self._get_gemini_move()
-            
+
             if move:
                 self._make_move(move)
-                
+
                 # Continue the game if not over
                 if not self.board.is_game_over():
                     self.master.after(500, self._ai_vs_ai_move)
-                    
+
         except Exception as e:
             messagebox.showerror("Error", f"AI move failed: {e}")
         finally:
             self.computer_thinking = False
             self._update_info()
-    
+
     def _get_gemini_move(self, retries: int = 3) -> Optional[chess.Move]:
         """Get a move from Gemini AI."""
         if not self.gemini_model:
             return None
-            
+
         legal_moves = [move.uci() for move in self.board.legal_moves]
         color = "White" if self.board.turn == chess.WHITE else "Black"
 
@@ -873,14 +896,14 @@ class CyberpunkChessGUI:
         # Fallback to random move
         print("Gemini failed to produce a legal move. Making random move.")
         return random.choice(list(self.board.legal_moves))
-    
+
     def _show_settings(self):
         """Show settings dialog."""
         settings_window = tk.Toplevel(self.master)
         settings_window.title("⚙️ Settings")
         settings_window.configure(bg=self.COLORS["background"])
         settings_window.geometry("500x400")
-        
+
         # Title
         tk.Label(
             settings_window,
@@ -889,11 +912,11 @@ class CyberpunkChessGUI:
             fg=self.COLORS["neon_cyan"],
             bg=self.COLORS["background"],
         ).pack(pady=10)
-        
+
         # Settings frame
         settings_frame = tk.Frame(settings_window, bg=self.COLORS["background"])
         settings_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
-        
+
         # Stockfish Path
         tk.Label(
             settings_frame,
@@ -903,7 +926,7 @@ class CyberpunkChessGUI:
             bg=self.COLORS["background"],
             anchor="w",
         ).pack(fill=tk.X, pady=(5, 2))
-        
+
         stockfish_entry = tk.Entry(
             settings_frame,
             font=("Courier New", 9),
@@ -913,7 +936,7 @@ class CyberpunkChessGUI:
         )
         stockfish_entry.insert(0, self.stockfish_path if self.stockfish_path else "")
         stockfish_entry.pack(fill=tk.X, pady=(0, 10))
-        
+
         # Gemini API Key
         tk.Label(
             settings_frame,
@@ -923,7 +946,7 @@ class CyberpunkChessGUI:
             bg=self.COLORS["background"],
             anchor="w",
         ).pack(fill=tk.X, pady=(5, 2))
-        
+
         gemini_entry = tk.Entry(
             settings_frame,
             font=("Courier New", 9),
@@ -934,7 +957,7 @@ class CyberpunkChessGUI:
         )
         gemini_entry.insert(0, self.gemini_api_key if self.gemini_api_key else "")
         gemini_entry.pack(fill=tk.X, pady=(0, 10))
-        
+
         # Stockfish Skill Level
         tk.Label(
             settings_frame,
@@ -944,10 +967,10 @@ class CyberpunkChessGUI:
             bg=self.COLORS["background"],
             anchor="w",
         ).pack(fill=tk.X, pady=(5, 2))
-        
+
         skill_frame = tk.Frame(settings_frame, bg=self.COLORS["background"])
         skill_frame.pack(fill=tk.X, pady=(0, 10))
-        
+
         skill_var = tk.IntVar(value=self.stockfish_skill_level)
         skill_scale = tk.Scale(
             skill_frame,
@@ -962,7 +985,7 @@ class CyberpunkChessGUI:
             activebackground=self.COLORS["neon_cyan"],
         )
         skill_scale.pack(fill=tk.X)
-        
+
         # Stockfish Time Limit
         tk.Label(
             settings_frame,
@@ -972,7 +995,7 @@ class CyberpunkChessGUI:
             bg=self.COLORS["background"],
             anchor="w",
         ).pack(fill=tk.X, pady=(5, 2))
-        
+
         time_entry = tk.Entry(
             settings_frame,
             font=("Courier New", 9),
@@ -982,7 +1005,7 @@ class CyberpunkChessGUI:
         )
         time_entry.insert(0, str(self.stockfish_time_limit))
         time_entry.pack(fill=tk.X, pady=(0, 10))
-        
+
         # Save button
         def save_settings():
             self.stockfish_path = stockfish_entry.get().strip()
@@ -992,7 +1015,7 @@ class CyberpunkChessGUI:
                 self.stockfish_time_limit = float(time_entry.get())
             except ValueError:
                 self.stockfish_time_limit = 0.5
-            
+
             # Update active engines with new skill level if they exist
             if self.engine:
                 try:
@@ -1004,10 +1027,13 @@ class CyberpunkChessGUI:
                     self.engine2.configure({"Skill Level": self.stockfish_skill_level})
                 except Exception:
                     pass
-            
-            messagebox.showinfo("Settings", "Settings saved successfully!\n\nNote: New game modes will appear after starting a new game.")
+
+            messagebox.showinfo(
+                "Settings",
+                "Settings saved successfully!\n\nNote: New game modes will appear after starting a new game.",
+            )
             settings_window.destroy()
-        
+
         save_btn_config = {
             "font": ("Courier New", 10, "bold"),
             "bg": self.COLORS["board_dark"],
@@ -1018,7 +1044,7 @@ class CyberpunkChessGUI:
             "borderwidth": 2,
             "cursor": "hand2",
         }
-        
+
         tk.Button(
             settings_window,
             text="💾 SAVE SETTINGS",
@@ -1055,7 +1081,7 @@ def main():
     """Main entry point for the GUI."""
     # Get Stockfish path from environment or config
     stockfish_path = os.environ.get("STOCKFISH_PATH", None)
-    
+
     # Get Gemini API key from environment or config
     gemini_api_key = os.environ.get("GOOGLE_API_KEY", None)
 
@@ -1076,19 +1102,19 @@ def main():
 
     # Make window resizable and set minimum size
     root.minsize(1000, 700)
-    
+
     # Get screen dimensions
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    
+
     # Set window size to 80% of screen size
     window_width = int(screen_width * 0.8)
     window_height = int(screen_height * 0.8)
-    
+
     # Calculate position to center window
     x = (screen_width // 2) - (window_width // 2)
     y = (screen_height // 2) - (window_height // 2)
-    
+
     root.geometry(f"{window_width}x{window_height}+{x}+{y}")
 
     # Create GUI
