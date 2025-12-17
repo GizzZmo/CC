@@ -19,7 +19,13 @@ class ChessDatabase:
         self.initialize_database()
 
     def connect(self):
-        """Connect to the database."""
+        """
+        Connect to the database.
+        
+        Note: check_same_thread=False is used for Flask compatibility.
+        For production, consider using connection pooling or ensuring
+        proper synchronization with locks when sharing connections.
+        """
         if self.conn is None:
             self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
             self.conn.row_factory = sqlite3.Row
@@ -113,7 +119,18 @@ class ChessDatabase:
         conn.commit()
 
     def hash_password(self, password: str) -> str:
-        """Hash a password using SHA-256."""
+        """
+        Hash a password using SHA-256.
+        
+        NOTE: For production use, consider upgrading to bcrypt, scrypt, or argon2
+        for better security against rainbow table attacks:
+        
+        Example with bcrypt:
+            import bcrypt
+            return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        
+        Current implementation uses SHA-256 for simplicity in development.
+        """
         return hashlib.sha256(password.encode()).hexdigest()
 
     def create_user(

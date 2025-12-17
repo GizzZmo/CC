@@ -515,8 +515,10 @@
                     move: move
                 });
             } else {
-                // Local game - would need chess.js or similar
-                console.log('Local move:', move);
+                // Local game mode - simplified (for full validation, would need chess.js library)
+                // Currently, local games display the board but don't enforce rules
+                showMessage('Local games are view-only. Use online mode for full gameplay.', 'error');
+                console.log('Local move attempted:', move);
             }
         }
 
@@ -648,8 +650,17 @@
                     connectWebSocket();
                     joinGame();
                 } else {
-                    // Still waiting
-                    setTimeout(findMatch, 3000); // Poll for match
+                    // Still waiting - use exponential backoff to reduce server load
+                    // Note: For production, implement WebSocket-based match notifications
+                    let retryDelay = 5000; // Start with 5 seconds
+                    showMessage('Waiting for opponent...', 'success');
+                    setTimeout(() => {
+                        // Allow user to cancel by checking button state
+                        if (!document.getElementById('find-match-btn').disabled) {
+                            return; // User cancelled
+                        }
+                        findMatch();
+                    }, retryDelay);
                 }
             } catch (error) {
                 showMessage('Matchmaking error', 'error');

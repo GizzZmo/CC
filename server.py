@@ -431,8 +431,51 @@ def handle_resign(data):
     # Broadcast resignation
     emit("player_resigned", {"user_id": user_id, "result": result}, room=session_id)
 
-    # Update ratings and save game (similar to game over)
-    # ... (similar logic to game over in make_move)
+    # Get player ratings and update them
+    white_player = db.get_user_by_id(game["white_player_id"])
+    black_player = db.get_user_by_id(game["black_player_id"])
+
+    white_rating_before = white_player["rating"]
+    black_rating_before = black_player["rating"]
+
+    # Calculate new ratings based on resignation
+    if result == "1-0":
+        white_score, black_score = 1.0, 0.0
+    else:
+        white_score, black_score = 0.0, 1.0
+
+    white_rating_after = db.calculate_elo_rating(
+        white_rating_before, black_rating_before, white_score
+    )
+    black_rating_after = db.calculate_elo_rating(
+        black_rating_before, white_rating_before, black_score
+    )
+
+    # Update ratings
+    db.update_user_rating(game["white_player_id"], white_rating_after)
+    db.update_user_rating(game["black_player_id"], black_rating_after)
+
+    # Create PGN for resigned game
+    game_pgn = chess.pgn.Game()
+    game_pgn.headers["Event"] = "Cyberchess Online Game"
+    game_pgn.headers["Date"] = datetime.now().strftime("%Y.%m.%d")
+    game_pgn.headers["Result"] = result
+    game_pgn.headers["Termination"] = "resignation"
+    
+    pgn_string = str(game_pgn)
+
+    # Record the game
+    db.record_game(
+        game["white_player_id"],
+        game["black_player_id"],
+        result,
+        pgn_string,
+        white_rating_before,
+        black_rating_before,
+        white_rating_after,
+        black_rating_after,
+        game["time_control"],
+    )
 
     db.delete_active_game(session_id)
 
@@ -446,7 +489,10 @@ def main():
     print(f"Mobile interface: http://localhost:5000")
     print(f"API endpoint: http://localhost:5000/api")
     print("=" * 60)
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
+    
+    # Debug mode controlled by environment variable (default: False for security)
+    debug_mode = os.environ.get("FLASK_DEBUG", "False").lower() == "true"
+    socketio.run(app, host="0.0.0.0", port=5000, debug=debug_mode)
 
 
 if __name__ == "__main__":
