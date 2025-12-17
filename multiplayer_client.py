@@ -86,6 +86,7 @@ class MultiplayerClient:
             response = requests.post(
                 f"{self.api_url}/register",
                 json={"username": username, "password": password, "email": email},
+                timeout=10,
             )
 
             if response.status_code == 200:
@@ -106,6 +107,7 @@ class MultiplayerClient:
             response = requests.post(
                 f"{self.api_url}/login",
                 json={"username": username, "password": password},
+                timeout=10,
             )
 
             if response.status_code == 200:
@@ -135,7 +137,7 @@ class MultiplayerClient:
             return None
 
         try:
-            response = requests.get(f"{self.api_url}/user/{user_id}")
+            response = requests.get(f"{self.api_url}/user/{user_id}", timeout=10)
             if response.status_code == 200:
                 return response.json()
             else:
@@ -148,7 +150,9 @@ class MultiplayerClient:
     def get_leaderboard(self, limit: int = 10) -> list:
         """Get the leaderboard."""
         try:
-            response = requests.get(f"{self.api_url}/leaderboard?limit={limit}")
+            response = requests.get(
+                f"{self.api_url}/leaderboard?limit={limit}", timeout=10
+            )
             if response.status_code == 200:
                 return response.json()
             else:
@@ -168,7 +172,7 @@ class MultiplayerClient:
 
         try:
             response = requests.get(
-                f"{self.api_url}/user/{user_id}/games?limit={limit}"
+                f"{self.api_url}/user/{user_id}/games?limit={limit}", timeout=10
             )
             if response.status_code == 200:
                 return response.json()
@@ -188,6 +192,7 @@ class MultiplayerClient:
             response = requests.post(
                 f"{self.api_url}/matchmaking/join",
                 json={"user_id": self.user_id, "time_control": time_control},
+                timeout=10,
             )
 
             if response.status_code == 200:
@@ -217,6 +222,7 @@ class MultiplayerClient:
             response = requests.post(
                 f"{self.api_url}/matchmaking/leave",
                 json={"user_id": self.user_id},
+                timeout=10,
             )
             return response.status_code == 200
         except Exception as e:
@@ -292,7 +298,7 @@ class MultiplayerClient:
             return None
 
         try:
-            response = requests.get(f"{self.api_url}/game/{session_id}")
+            response = requests.get(f"{self.api_url}/game/{session_id}", timeout=10)
             if response.status_code == 200:
                 return response.json()
             else:
