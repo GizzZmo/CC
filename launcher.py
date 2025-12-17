@@ -112,6 +112,7 @@ def main():
             print("\n⚠️  Starting server in 3 seconds...")
             print("   Press Ctrl+C to stop the server and return to menu")
             import time
+
             time.sleep(3)
             try:
                 from server import main as server_main
