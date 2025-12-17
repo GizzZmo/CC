@@ -85,39 +85,62 @@ To create an accessible, feature-rich chess platform that serves players of all 
     - Click-to-move interface
     - Real-time game status and move history
     - Player vs Player and Player vs Computer modes
+  - ✅ **Mobile Web GUI** - Responsive web interface for mobile devices
+    - Touch-friendly controls
+    - Responsive design for all screen sizes
+    - Real-time multiplayer via WebSocket
+    - Accessible from any modern web browser
+- **Online Multiplayer**: 
+  - ✅ Flask-based server infrastructure
+  - ✅ User registration and authentication
+  - ✅ Elo-based rating system (starting at 1200)
+  - ✅ Automatic matchmaking with rating-based pairing
+  - ✅ Real-time game synchronization via WebSocket
+  - ✅ Game history tracking per user
+  - ✅ Leaderboard system
+  - ✅ SQLite database for persistent storage
 - **Example Assets**: Famous chess games collection for learning
 - **Testing**: Comprehensive automated test suite
 - **Build System**: Automated packaging and distribution
 
 ### Planned Features 🔮
-- **Online Features**: 
-  - Online multiplayer support (requires server infrastructure)
-  - User accounts and rating system (requires database)
 - **UI Enhancements**:
-  - Mobile responsiveness
   - Additional GUI themes and customization options
+  - Native mobile apps (iOS/Android)
+- **Online Features**:
+  - Time controls enforcement in online games
+  - Tournament support
+  - Friend system and direct challenges
+  - Game chat and spectator mode
+  - Advanced anti-cheating measures
 
 ## Project Structure
 
 ```
 CC/
-├── README.md              # This file - comprehensive project documentation
-├── CHANGELOG.md           # Version history and change log
-├── CONTRIBUTING.md        # Contribution guidelines
-├── launcher.py            # Main launcher - choose between GUI and CLI
-├── cyberpunk_gui.py       # Cyberpunk GUI - neon-themed graphical interface
-├── gui_preview.html       # GUI preview/demo (HTML version)
-├── cyberchess.py          # Legacy chess game (Stockfish vs Gemini)
-├── game_modes.py          # Game mode implementations (PvP, PvC, AI vs AI)
-├── play.py                # Classic CLI interactive game launcher
-├── demo.py                # Feature demonstration script
-├── opening_book.py        # Opening book database and explorer
-├── puzzles.py             # Chess puzzle trainer
-├── test_features.py       # Automated test suite
-├── build.py               # Build and packaging script
-├── requirements.txt       # Python dependencies
+├── README.md                  # This file - comprehensive project documentation
+├── CHANGELOG.md               # Version history and change log
+├── CONTRIBUTING.md            # Contribution guidelines
+├── ONLINE_MULTIPLAYER_GUIDE.md # Online multiplayer documentation
+├── launcher.py                # Main launcher - choose between GUI, CLI, and Server
+├── cyberpunk_gui.py           # Cyberpunk GUI - neon-themed graphical interface
+├── gui_preview.html           # GUI preview/demo (HTML version)
+├── server.py                  # Flask server for online multiplayer
+├── database.py                # Database module with user accounts and ratings
+├── multiplayer_client.py      # Client library for online play
+├── cyberchess.py              # Legacy chess game (Stockfish vs Gemini)
+├── game_modes.py              # Game mode implementations (PvP, PvC, AI vs AI)
+├── play.py                    # Classic CLI interactive game launcher with online mode
+├── demo.py                    # Feature demonstration script
+├── opening_book.py            # Opening book database and explorer
+├── puzzles.py                 # Chess puzzle trainer
+├── test_features.py           # Automated test suite
+├── build.py                   # Build and packaging script
+├── requirements.txt           # Python dependencies
 ├── config_template.py     # Configuration template
 ├── .gitignore            # Git ignore rules
+├── static/               # Static files for web interface
+│   └── mobile_gui.html  # Mobile-responsive web interface
 ├── examples/             # Example games and assets
 │   ├── README.md         # Examples documentation
 │   └── famous_games.pgn  # Collection of famous chess games
@@ -126,7 +149,7 @@ CC/
 └── .git/                 # Git repository metadata
 ```
 
-*Updated: December 15, 2025 - Phase 3 & 4 Complete*
+*Updated: December 17, 2025 - Phase 5 Complete: Online Multiplayer & Mobile*
 
 ## Getting Started
 
@@ -200,7 +223,7 @@ You can configure Cyberchess in multiple ways:
 
 ### Quick Start - Choose Your Interface
 
-Cyberchess offers two interfaces:
+Cyberchess offers multiple interfaces:
 
 **Option 1: Main Launcher (Recommended)**
 ```bash
@@ -209,6 +232,8 @@ python launcher.py
 This presents a menu to choose between:
 - 💀 **Cyberpunk GUI** - Neon-themed graphical interface
 - 🖥️  **Classic CLI** - Traditional console interface
+- 🌐 **Online Server** - Start multiplayer server
+- 📱 **Mobile Web** - Launch mobile web interface
 
 **Option 2: Direct Launch**
 ```bash
@@ -217,7 +242,51 @@ python cyberpunk_gui.py
 
 # Launch Classic CLI directly
 python play.py
+
+# Launch Online Server directly
+python server.py
 ```
+
+### Online Multiplayer
+
+Cyberchess now supports online multiplayer chess with user accounts and ratings!
+
+**Starting the Server:**
+```bash
+# Option 1: Via launcher
+python launcher.py
+# Select option 3 (ONLINE SERVER) or 4 (MOBILE WEB)
+
+# Option 2: Direct launch
+python server.py
+```
+
+The server starts on http://localhost:5000
+
+**Playing Online:**
+
+1. **Via Mobile Web Interface** (Recommended)
+   - Open browser to http://localhost:5000
+   - Click "Login" or "Register" to create an account
+   - Click "Find Match" to search for an opponent
+   - Play directly in the browser with touch controls
+
+2. **Via CLI**
+   - Run `python play.py`
+   - Select option 4 (Online Multiplayer)
+   - Login or Register
+   - Choose "Find Match" to play
+
+**Features:**
+- 👤 User registration and authentication
+- 📊 Elo rating system (starting at 1200)
+- 🎯 Automatic matchmaking by skill level
+- 📜 Game history tracking
+- 🏆 Leaderboard rankings
+- 📱 Mobile-responsive web interface
+- ⚡ Real-time gameplay via WebSocket
+
+**See the [Online Multiplayer Guide](ONLINE_MULTIPLAYER_GUIDE.md) for detailed documentation.**
 
 ### Cyberpunk GUI
 
@@ -263,15 +332,21 @@ This provides a menu with options:
    - Choose board display theme
    - Choose color assignment: classic, reversed, or random (recommended for training)
    - Configurable Stockfish skill level
-4. **Puzzle Trainer** - Solve tactical chess puzzles
+4. **Online Multiplayer** - Play against other players online
+   - Register or login to your account
+   - Find matches with automatic matchmaking
+   - View leaderboard and game history
+   - Track your Elo rating
+5. **Puzzle Trainer** - Solve tactical chess puzzles
    - Multiple difficulty levels
    - Interactive solving with hints
    - Various tactical themes
-5. **Opening Book Explorer** - Learn chess openings
+6. **Opening Book Explorer** - Learn chess openings
    - View all 12+ openings in database
    - Interactive opening practice
    - Opening identification
-6. Exit
+7. **About** - View application information
+8. **Exit**
 
 ### Board Display Themes
 
@@ -425,7 +500,13 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 - **Chess Library**: python-chess (board representation, move generation, and validation)
 - **AI Integration**: Google Gemini 1.5 Flash (for AI opponent)
 - **Chess Engine**: Stockfish (for strong AI play)
-- **UI**: Console-based (text output)
+- **Web Framework**: Flask (for online multiplayer server)
+- **Real-time Communication**: Flask-SocketIO, python-socketio (WebSocket)
+- **Database**: SQLite (user accounts, ratings, game history)
+- **UI**: 
+  - Console-based (text output)
+  - Tkinter (Cyberpunk GUI)
+  - HTML/CSS/JavaScript (Mobile Web GUI)
 
 ## Roadmap
 
@@ -451,23 +532,45 @@ For more details, see [CONTRIBUTING.md](CONTRIBUTING.md).
 - [x] Opening book integration (12+ openings with ECO codes)
 - [x] Chess puzzles and training mode (8+ puzzles)
 - [x] Time controls (Blitz, Rapid, Classical)
-- [ ] Online multiplayer support (deferred - requires server infrastructure)
-- [ ] User accounts and rating system (deferred - requires database)
+- [x] Online multiplayer support
+- [x] User accounts and rating system
 
 ### Phase 4: Polish ✅ (Completed)
 - [x] Graphical UI - Cyberpunk-themed tkinter GUI (desktop)
 - [x] Multiple board display themes
 - [x] Performance optimization
-- [ ] Mobile responsiveness (deferred - requires mobile GUI)
+- [x] Mobile responsiveness - Mobile web GUI
 - [x] Comprehensive automated testing
 - [x] Documentation improvements
 - [x] Build system and distribution artifacts
+
+### Phase 5: Online Multiplayer ✅ (Completed)
+- [x] Flask-based server infrastructure
+- [x] SQLite database with user accounts
+- [x] Elo-based rating system
+- [x] Automatic matchmaking
+- [x] Real-time gameplay via WebSocket
+- [x] Game history and leaderboard
+- [x] Mobile-responsive web interface
+- [x] Integration with CLI and launcher
 
 ## Changelog
 
 For a detailed history of changes, see [CHANGELOG.md](CHANGELOG.md).
 
 ### Recent Changes
+
+#### v0.6.0 (2025-12-17) - Online Multiplayer & Mobile Web
+- ✅ Added Flask-based server for online multiplayer
+- ✅ Implemented user registration and authentication system
+- ✅ Added Elo-based rating system (starting at 1200)
+- ✅ Created automatic matchmaking with skill-based pairing
+- ✅ Implemented real-time game synchronization via WebSocket
+- ✅ Added SQLite database for persistent storage
+- ✅ Created mobile-responsive web interface
+- ✅ Added game history tracking and leaderboard
+- ✅ Integrated online mode into CLI and launcher
+- ✅ Comprehensive online multiplayer documentation
 
 #### v0.5.0 (2025-12-15) - Cyberpunk GUI
 - ✅ Added Cyberpunk GUI - Desktop graphical interface with neon theme
@@ -512,6 +615,6 @@ For support, questions, or feedback:
 
 ---
 
-**Status**: 🎉 Phase 3 & 4 Complete - Advanced Features + Cyberpunk GUI!
+**Status**: 🎉 Phase 5 Complete - Online Multiplayer + Mobile Web Interface!
 
-*Last Updated: December 15, 2025*
+*Last Updated: December 17, 2025*
