@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>⚡ CYBERCHESS ⚡ Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #00fff9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 255, 249, 0.1);
+            border-bottom: 2px solid #00fff9;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 249, 0.3);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px #00fff9;
+            margin-bottom: 5px;
+        }
+
+        .status {
+            font-size: 0.9rem;
+            color: #39ff14;
+        }
+
+        /* Main container */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Chess board */
+        .board-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin: 15px auto;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            width: 100%;
+            aspect-ratio: 1;
+            border: 3px solid #00fff9;
+            box-shadow: 0 0 30px rgba(0, 255, 249, 0.5);
+        }
+
+        .square {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .square.light {
+            background-color: #2d3561;
+        }
+
+        .square.dark {
+            background-color: #1a1f3a;
+        }
+
+        .square.selected {
+            background-color: #ffff00 !important;
+            box-shadow: inset 0 0 15px rgba(255, 255, 0, 0.7);
+        }
+
+        .square.legal-move {
+            background-color: rgba(57, 255, 20, 0.3) !important;
+        }
+
+        .square.last-move {
+            background-color: rgba(255, 0, 255, 0.3) !important;
+        }
+
+        .square:active {
+            transform: scale(0.95);
+        }
+
+        /* Piece styles */
+        .piece {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        }
+
+        /* Controls */
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, rgba(0, 255, 249, 0.2), rgba(255, 0, 255, 0.2));
+            color: #00fff9;
+            border: 2px solid #00fff9;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(0, 255, 249, 0.3);
+        }
+
+        button:hover, button:active {
+            background: linear-gradient(135deg, rgba(0, 255, 249, 0.4), rgba(255, 0, 255, 0.4));
+            box-shadow: 0 0 20px rgba(0, 255, 249, 0.6);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Info panel */
+        .info-panel {
+            background: rgba(0, 255, 249, 0.1);
+            border: 2px solid #00fff9;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        .info-panel h3 {
+            color: #ff00ff;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        /* Move history */
+        .move-history {
+            max-height: 150px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+        }
+
+        .move-history::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .move-history::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .move-history::-webkit-scrollbar-thumb {
+            background: #00fff9;
+            border-radius: 4px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #0a0e27;
+            border: 3px solid #00fff9;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 90%;
+            width: 400px;
+            box-shadow: 0 0 50px rgba(0, 255, 249, 0.5);
+        }
+
+        .modal-content h2 {
+            color: #ff00ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(0, 255, 249, 0.1);
+            border: 2px solid #00fff9;
+            color: #00fff9;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            border-radius: 5px;
+        }
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 255, 249, 0.5);
+        }
+
+        .leaderboard {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .leaderboard-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(0, 255, 249, 0.1);
+            border-left: 3px solid #39ff14;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            .piece {
+                font-size: 2rem;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .info-panel {
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .piece {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 4px solid rgba(0, 255, 249, 0.3);
+            border-top: 4px solid #00fff9;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Messages */
+        .message {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .message.success {
+            background: rgba(57, 255, 20, 0.2);
+            border: 2px solid #39ff14;
+            color: #39ff14;
+        }
+
+        .message.error {
+            background: rgba(255, 7, 58, 0.2);
+            border: 2px solid #ff073a;
+            color: #ff073a;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚡ CYBERCHESS ⚡</h1>
+        <div class="status" id="status">Mobile Edition</div>
+    </header>
+
+    <div class="container">
+        <!-- Board -->
+        <div class="board-container">
+            <div class="board" id="board"></div>
+        </div>
+
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <h3>Game Info</h3>
+            <div class="info-row">
+                <span>Status:</span>
+                <span id="game-status">Not Started</span>
+            </div>
+            <div class="info-row">
+                <span>Your Color:</span>
+                <span id="player-color">-</span>
+            </div>
+            <div class="info-row">
+                <span>Rating:</span>
+                <span id="player-rating">-</span>
+            </div>
+        </div>
+
+        <!-- Move History -->
+        <div class="info-panel">
+            <h3>Move History</h3>
+            <div class="move-history" id="move-history">
+                No moves yet
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button onclick="showLoginModal()">Login</button>
+            <button onclick="showLeaderboard()">Leaderboard</button>
+            <button onclick="findMatch()" id="find-match-btn">Find Match</button>
+            <button onclick="resign()" id="resign-btn" disabled>Resign</button>
+            <button onclick="newLocalGame()">Local Game</button>
+            <button onclick="resetGame()">Reset</button>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <h2>Login / Register</h2>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <div class="controls">
+                <button onclick="login()">Login</button>
+                <button onclick="register()">Register</button>
+            </div>
+            <button onclick="closeModal('login-modal')" style="margin-top: 10px; width: 100%;">Close</button>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div class="modal" id="leaderboard-modal">
+        <div class="modal-content">
+            <h2>📊 Leaderboard</h2>
+            <div class="leaderboard" id="leaderboard-list">
+                <div class="spinner"></div>
+            </div>
+            <button onclick="closeModal('leaderboard-modal')" style="margin-top: 10px; width: 100%;">Close</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        // Configuration
+        const SERVER_URL = window.location.origin;
+        const API_URL = `${SERVER_URL}/api`;
+
+        // State
+        let socket = null;
+        let userId = localStorage.getItem('userId');
+        let username = localStorage.getItem('username');
+        let sessionToken = localStorage.getItem('sessionToken');
+        let gameSessionId = null;
+        let playerColor = null;
+        let currentBoard = null;
+        let selectedSquare = null;
+        let legalMoves = [];
+        let moveHistory = [];
+        let isOnlineGame = false;
+
+        // Chess piece Unicode symbols
+        const PIECES = {
+            'P': '♙', 'N': '♘', 'B': '♗', 'R': '♖', 'Q': '♕', 'K': '♔',
+            'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': '♛', 'k': '♚'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeBoard();
+            if (userId) {
+                document.getElementById('status').textContent = `Welcome, ${username}!`;
+                loadUserProfile();
+            }
+        });
+
+        function initializeBoard() {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            
+            // Create starting position
+            const startFen = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+            renderBoard(startFen);
+        }
+
+        function renderBoard(fen) {
+            const board = document.getElementById('board');
+            board.innerHTML = '';
+            
+            const rows = fen.split(' ')[0].split('/');
+            
+            for (let row = 0; row < 8; row++) {
+                let col = 0;
+                for (let char of rows[row]) {
+                    if (isNaN(char)) {
+                        const square = createSquare(row, col, char);
+                        board.appendChild(square);
+                        col++;
+                    } else {
+                        for (let i = 0; i < parseInt(char); i++) {
+                            const square = createSquare(row, col, null);
+                            board.appendChild(square);
+                            col++;
+                        }
+                    }
+                }
+            }
+        }
+
+        function createSquare(row, col, piece) {
+            const square = document.createElement('div');
+            square.className = `square ${(row + col) % 2 === 0 ? 'light' : 'dark'}`;
+            square.dataset.row = row;
+            square.dataset.col = col;
+            
+            if (piece) {
+                const pieceSpan = document.createElement('span');
+                pieceSpan.className = 'piece';
+                pieceSpan.textContent = PIECES[piece] || piece;
+                square.appendChild(pieceSpan);
+            }
+            
+            square.addEventListener('click', () => handleSquareClick(row, col));
+            
+            return square;
+        }
+
+        function handleSquareClick(row, col) {
+            const square = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            
+            if (selectedSquare) {
+                // Try to make a move
+                const fromSquare = `${String.fromCharCode(97 + selectedSquare.col)}${8 - selectedSquare.row}`;
+                const toSquare = `${String.fromCharCode(97 + col)}${8 - row}`;
+                const move = fromSquare + toSquare;
+                
+                makeMove(move);
+                clearSelection();
+            } else if (square.querySelector('.piece')) {
+                // Select piece
+                selectedSquare = { row, col };
+                square.classList.add('selected');
+            }
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.square').forEach(sq => {
+                sq.classList.remove('selected', 'legal-move');
+            });
+            selectedSquare = null;
+        }
+
+        function makeMove(move) {
+            if (isOnlineGame && socket) {
+                socket.emit('make_move', {
+                    session_id: gameSessionId,
+                    user_id: userId,
+                    move: move
+                });
+            } else {
+                // Local game mode - simplified (for full validation, would need chess.js library)
+                // Currently, local games display the board but don't enforce rules
+                showMessage('Local games are view-only. Use online mode for full gameplay.', 'error');
+                console.log('Local move attempted:', move);
+            }
+        }
+
+        // API Functions
+        async function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    userId = data.user_id;
+                    username = data.username;
+                    sessionToken = data.session_token;
+                    
+                    localStorage.setItem('userId', userId);
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('sessionToken', sessionToken);
+                    
+                    document.getElementById('status').textContent = `Welcome, ${username}!`;
+                    document.getElementById('player-rating').textContent = data.rating;
+                    showMessage('Login successful!', 'success');
+                    closeModal('login-modal');
+                    connectWebSocket();
+                } else {
+                    showMessage(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error', 'error');
+            }
+        }
+
+        async function register() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('Registration successful! Please login.', 'success');
+                } else {
+                    showMessage(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showMessage('Connection error', 'error');
+            }
+        }
+
+        async function loadUserProfile() {
+            if (!userId) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/user/${userId}`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('player-rating').textContent = data.rating;
+                }
+            } catch (error) {
+                console.error('Failed to load profile:', error);
+            }
+        }
+
+        async function showLeaderboard() {
+            document.getElementById('leaderboard-modal').classList.add('active');
+            
+            try {
+                const response = await fetch(`${API_URL}/leaderboard?limit=20`);
+                const data = await response.json();
+                
+                const list = document.getElementById('leaderboard-list');
+                list.innerHTML = '';
+                
+                data.forEach((player, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'leaderboard-item';
+                    item.innerHTML = `
+                        <span>${index + 1}. ${player.username}</span>
+                        <span>${player.rating}</span>
+                    `;
+                    list.appendChild(item);
+                });
+            } catch (error) {
+                document.getElementById('leaderboard-list').innerHTML = '<p>Failed to load leaderboard</p>';
+            }
+        }
+
+        async function findMatch() {
+            if (!userId) {
+                showMessage('Please login first', 'error');
+                return;
+            }
+            
+            document.getElementById('find-match-btn').disabled = true;
+            document.getElementById('game-status').textContent = 'Finding match...';
+            
+            try {
+                const response = await fetch(`${API_URL}/matchmaking/join`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_id: userId, time_control: 'blitz' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.matched) {
+                    gameSessionId = data.session_id;
+                    playerColor = data.your_color;
+                    isOnlineGame = true;
+                    
+                    document.getElementById('player-color').textContent = playerColor;
+                    document.getElementById('game-status').textContent = 'Game started!';
+                    document.getElementById('resign-btn').disabled = false;
+                    
+                    connectWebSocket();
+                    joinGame();
+                } else {
+                    // Still waiting - use exponential backoff to reduce server load
+                    // Note: For production, implement WebSocket-based match notifications
+                    let retryDelay = 5000; // Start with 5 seconds
+                    showMessage('Waiting for opponent...', 'success');
+                    setTimeout(() => {
+                        // Allow user to cancel by checking button state
+                        if (!document.getElementById('find-match-btn').disabled) {
+                            return; // User cancelled
+                        }
+                        findMatch();
+                    }, retryDelay);
+                }
+            } catch (error) {
+                showMessage('Matchmaking error', 'error');
+                document.getElementById('find-match-btn').disabled = false;
+            }
+        }
+
+        function resign() {
+            if (socket && gameSessionId) {
+                socket.emit('resign', {
+                    session_id: gameSessionId,
+                    user_id: userId
+                });
+            }
+        }
+
+        function newLocalGame() {
+            isOnlineGame = false;
+            gameSessionId = null;
+            moveHistory = [];
+            document.getElementById('game-status').textContent = 'Local Game';
+            document.getElementById('player-color').textContent = 'White';
+            document.getElementById('move-history').textContent = 'No moves yet';
+            document.getElementById('resign-btn').disabled = true;
+            document.getElementById('find-match-btn').disabled = false;
+            initializeBoard();
+        }
+
+        function resetGame() {
+            newLocalGame();
+        }
+
+        // WebSocket
+        function connectWebSocket() {
+            if (socket) return;
+            
+            socket = io(SERVER_URL);
+            
+            socket.on('connected', (data) => {
+                console.log('Connected to server');
+            });
+            
+            socket.on('move_made', (data) => {
+                renderBoard(data.fen);
+                moveHistory.push(data.san);
+                updateMoveHistory();
+                
+                if (data.game_over) {
+                    document.getElementById('game-status').textContent = `Game Over: ${data.result}`;
+                    document.getElementById('resign-btn').disabled = true;
+                    showMessage(`Game Over: ${data.result}`, 'success');
+                }
+            });
+            
+            socket.on('error', (data) => {
+                showMessage(data.message, 'error');
+            });
+        }
+
+        function joinGame() {
+            if (socket && gameSessionId) {
+                socket.emit('join_game', {
+                    session_id: gameSessionId,
+                    user_id: userId
+                });
+            }
+        }
+
+        function updateMoveHistory() {
+            const historyDiv = document.getElementById('move-history');
+            historyDiv.innerHTML = '';
+            
+            for (let i = 0; i < moveHistory.length; i += 2) {
+                const moveNum = Math.floor(i / 2) + 1;
+                const whiteMove = moveHistory[i];
+                const blackMove = moveHistory[i + 1] || '';
+                historyDiv.innerHTML += `${moveNum}. ${whiteMove} ${blackMove}<br>`;
+            }
+        }
+
+        function showMessage(text, type) {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            document.querySelector('.container').insertBefore(message, document.querySelector('.board-container'));
+            
+            setTimeout(() => message.remove(), 3000);
+        }
+
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+    </script>
+</body>
+</html>

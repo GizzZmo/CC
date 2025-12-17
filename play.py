@@ -54,20 +54,21 @@ def display_menu():
     print("1. Player vs Player")
     print("2. Player vs Computer")
     print("3. AI vs AI (Stockfish vs Gemini)")
-    print("4. Puzzle Trainer")
-    print("5. Opening Book Explorer")
-    print("6. About")
-    print("7. Exit")
+    print("4. Online Multiplayer")
+    print("5. Puzzle Trainer")
+    print("6. Opening Book Explorer")
+    print("7. About")
+    print("8. Exit")
     print("=" * 50)
 
 
 def get_user_choice():
     """Get user's menu choice."""
     while True:
-        choice = input("\nEnter your choice (1-7): ").strip()
-        if choice in ["1", "2", "3", "4", "5", "6", "7"]:
+        choice = input("\nEnter your choice (1-8): ").strip()
+        if choice in ["1", "2", "3", "4", "5", "6", "7", "8"]:
             return choice
-        print("❌ Invalid choice! Please enter 1, 2, 3, 4, 5, 6, or 7.")
+        print("❌ Invalid choice! Please enter 1, 2, 3, 4, 5, 6, 7, or 8.")
 
 
 def check_configuration():
@@ -409,6 +410,170 @@ def explore_openings():
             print(f"💡 Suggested continuation: {board.san(suggested)}")
 
 
+def play_online_multiplayer():
+    """Start online multiplayer mode."""
+    print("\n" + "=" * 50)
+    print("🌐 ONLINE MULTIPLAYER")
+    print("=" * 50)
+    
+    try:
+        from multiplayer_client import MultiplayerClient
+    except ImportError:
+        print("\n❌ Error: multiplayer_client module not found!")
+        print("Make sure all required packages are installed:")
+        print("  pip install flask flask-cors flask-socketio python-socketio requests")
+        return
+    
+    # Get server URL
+    server_url = input("\nServer URL (default: http://localhost:5000): ").strip()
+    if not server_url:
+        server_url = "http://localhost:5000"
+    
+    # Create client
+    client = MultiplayerClient(server_url)
+    
+    # Connect to server
+    print("\n🔌 Connecting to server...")
+    if not client.connect():
+        print("❌ Failed to connect to server!")
+        print("Make sure the server is running: python server.py")
+        return
+    
+    print("✅ Connected to server!")
+    
+    # Login or Register
+    print("\n👤 Account Management")
+    print("1. Login")
+    print("2. Register")
+    print("3. Guest Mode (local only)")
+    
+    auth_choice = input("\nChoose option (1-3): ").strip()
+    
+    if auth_choice == "1":
+        username = input("Username: ").strip()
+        password = input("Password: ").strip()
+        
+        if not client.login(username, password):
+            print("❌ Login failed!")
+            client.disconnect()
+            return
+        
+    elif auth_choice == "2":
+        username = input("Username: ").strip()
+        password = input("Password: ").strip()
+        email = input("Email (optional): ").strip() or None
+        
+        if not client.register(username, password, email):
+            print("❌ Registration failed!")
+            client.disconnect()
+            return
+        
+        print("\n✅ Registration successful! Now logging in...")
+        if not client.login(username, password):
+            print("❌ Login failed!")
+            client.disconnect()
+            return
+    
+    elif auth_choice == "3":
+        print("\n⚠️  Guest mode: You can view leaderboard but cannot play online games")
+    
+    else:
+        print("❌ Invalid choice!")
+        client.disconnect()
+        return
+    
+    # Show user profile if logged in
+    if client.user_id:
+        print("\n📊 Your Profile")
+        profile = client.get_user_profile()
+        if profile:
+            print(f"  Username: {profile['username']}")
+            print(f"  Rating: {profile['rating']}")
+            print(f"  Games Played: {profile['games_played']}")
+            print(f"  Win/Loss/Draw: {profile['games_won']}/{profile['games_lost']}/{profile['games_drawn']}")
+    
+    # Online multiplayer menu
+    while True:
+        print("\n" + "=" * 50)
+        print("ONLINE MULTIPLAYER MENU")
+        print("=" * 50)
+        print("\n1. Find Match (Blitz)")
+        print("2. View Leaderboard")
+        print("3. View Game History")
+        print("4. Back to Main Menu")
+        
+        online_choice = input("\nChoose option (1-4): ").strip()
+        
+        if online_choice == "1":
+            if not client.user_id:
+                print("❌ You must be logged in to play!")
+                continue
+            
+            print("\n🔍 Searching for opponent...")
+            match = client.join_matchmaking("blitz")
+            
+            if match and match.get("matched"):
+                print(f"✅ Match found!")
+                print(f"   Session ID: {match['session_id']}")
+                print(f"   Playing as: {match['your_color']}")
+                
+                # Join the game
+                client.join_game()
+                
+                print("\n🎮 Game started!")
+                print("   Note: For full interactive gameplay, use the Cyberpunk GUI or Mobile Web interface")
+                print("   This CLI provides basic move tracking only")
+                
+                input("\nPress Enter when finished playing...")
+                client.leave_game()
+            else:
+                print("⏳ No opponent found. You are in the queue.")
+                print("   Please try again later or use the GUI for automatic matching")
+                client.leave_matchmaking()
+        
+        elif online_choice == "2":
+            print("\n📊 LEADERBOARD")
+            print("=" * 50)
+            leaderboard = client.get_leaderboard(20)
+            
+            if leaderboard:
+                print(f"{'Rank':<6} {'Username':<20} {'Rating':<8} {'Games':<8} {'W/L/D':<12}")
+                print("-" * 60)
+                for i, player in enumerate(leaderboard, 1):
+                    wld = f"{player['games_won']}/{player['games_lost']}/{player['games_drawn']}"
+                    print(f"{i:<6} {player['username']:<20} {player['rating']:<8} {player['games_played']:<8} {wld:<12}")
+            else:
+                print("No players found")
+        
+        elif online_choice == "3":
+            if not client.user_id:
+                print("❌ You must be logged in!")
+                continue
+            
+            print("\n📜 GAME HISTORY")
+            print("=" * 50)
+            games = client.get_user_games(limit=10)
+            
+            if games:
+                for i, game in enumerate(games, 1):
+                    print(f"\n{i}. {game['white_username']} vs {game['black_username']}")
+                    print(f"   Result: {game['result']}")
+                    print(f"   Date: {game['played_at']}")
+            else:
+                print("No games found")
+        
+        elif online_choice == "4":
+            print("\n👋 Leaving online multiplayer...")
+            break
+        
+        else:
+            print("❌ Invalid choice!")
+    
+    # Disconnect from server
+    client.disconnect()
+    print("✅ Disconnected from server")
+
+
 def show_about():
     """Display information about the application."""
     print("\n" + "=" * 60)
@@ -425,6 +590,9 @@ def show_about():
     print("  • Player vs Player mode")
     print("  • Player vs Computer (Stockfish AI)")
     print("  • AI vs AI (Stockfish vs Gemini)")
+    print("  • Online Multiplayer with user accounts")
+    print("  • Rating system (Elo-based)")
+    print("  • Mobile-responsive web interface")
     print("  • Chess puzzle trainer with 8+ tactical puzzles")
     print("  • Opening book with 12+ popular openings")
     print("  • Time controls (Blitz, Rapid, Classical, Custom)")
@@ -474,12 +642,14 @@ def main():
         elif choice == "3":
             play_ai_vs_ai()
         elif choice == "4":
-            play_puzzles()
+            play_online_multiplayer()
         elif choice == "5":
-            explore_openings()
+            play_puzzles()
         elif choice == "6":
-            show_about()
+            explore_openings()
         elif choice == "7":
+            show_about()
+        elif choice == "8":
             print("\n👋 Thanks for playing Cyberchess! Goodbye!")
             break
 
