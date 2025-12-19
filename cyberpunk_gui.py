@@ -463,66 +463,70 @@ class CyberpunkChessGUI:
             control_frame, text="✕ EXIT", command=self.master.quit, **quit_btn_config
         ).pack(fill=tk.X, padx=10, pady=2)
 
+    def _render_square(self, square: int):
+        """Render a single square with current styling."""
+        btn = self.square_buttons[square]
+        piece = self.board.piece_at(square)
+
+        # Set piece symbol
+        if piece:
+            symbol = self.PIECES.get(piece.symbol(), piece.symbol())
+            btn.config(text=symbol)
+            # Color based on piece color
+            btn.config(
+                fg=(
+                    self.COLORS["white_piece"]
+                    if piece.color == chess.WHITE
+                    else self.COLORS["black_piece"]
+                )
+            )
+        else:
+            btn.config(text="")
+
+        # Reset background
+        row, col = chess.square_rank(square), chess.square_file(square)
+        is_light = (row + col) % 2 == 1
+        default_bg = (
+            self.COLORS["board_light"] if is_light else self.COLORS["board_dark"]
+        )
+
+        # Highlight selected square
+        if square == self.selected_square:
+            btn.config(
+                bg=self.COLORS["selected"],
+                highlightbackground=self.COLORS["neon_yellow"],
+                highlightthickness=3,
+            )
+        elif square == self.hover_square:
+            btn.config(
+                bg=default_bg,
+                highlightbackground=self.COLORS["grid"],
+                highlightthickness=1,
+            )
+        # Highlight legal move targets
+        elif square in [move.to_square for move in self.legal_moves]:
+            btn.config(
+                bg=self.COLORS["highlight"],
+                highlightbackground=self.COLORS["neon_magenta"],
+                highlightthickness=2,
+            )
+        # Highlight last move
+        elif self.last_move and square in [
+            self.last_move.from_square,
+            self.last_move.to_square,
+        ]:
+            btn.config(
+                bg=self.COLORS["last_move"],
+                highlightbackground=self.COLORS["neon_green"],
+                highlightthickness=2,
+            )
+        else:
+            btn.config(bg=default_bg, highlightthickness=0)
+
     def _update_board(self):
         """Update the board display."""
         for square in chess.SQUARES:
-            btn = self.square_buttons[square]
-            piece = self.board.piece_at(square)
-
-            # Set piece symbol
-            if piece:
-                symbol = self.PIECES.get(piece.symbol(), piece.symbol())
-                btn.config(text=symbol)
-                # Color based on piece color
-                btn.config(
-                    fg=(
-                        self.COLORS["white_piece"]
-                        if piece.color == chess.WHITE
-                        else self.COLORS["black_piece"]
-                    )
-                )
-            else:
-                btn.config(text="")
-
-            # Reset background
-            row, col = chess.square_rank(square), chess.square_file(square)
-            is_light = (row + col) % 2 == 1
-            default_bg = (
-                self.COLORS["board_light"] if is_light else self.COLORS["board_dark"]
-            )
-
-            # Highlight selected square
-            if square == self.selected_square:
-                btn.config(
-                    bg=self.COLORS["selected"],
-                    highlightbackground=self.COLORS["neon_yellow"],
-                    highlightthickness=3,
-                )
-            # Highlight legal move targets
-            elif square in [move.to_square for move in self.legal_moves]:
-                btn.config(
-                    bg=self.COLORS["highlight"],
-                    highlightbackground=self.COLORS["neon_magenta"],
-                    highlightthickness=2,
-                )
-            # Highlight last move
-            elif self.last_move and square in [
-                self.last_move.from_square,
-                self.last_move.to_square,
-            ]:
-                btn.config(
-                    bg=self.COLORS["last_move"],
-                    highlightbackground=self.COLORS["neon_green"],
-                    highlightthickness=2,
-                )
-            elif square == self.hover_square:
-                btn.config(
-                    bg=default_bg,
-                    highlightbackground=self.COLORS["grid"],
-                    highlightthickness=1,
-                )
-            else:
-                btn.config(bg=default_bg, highlightthickness=0)
+            self._render_square(square)
 
         # Update info panel
         self._update_info()
@@ -531,8 +535,14 @@ class CyberpunkChessGUI:
         """Update the square currently under the cursor for hover styling."""
         if self.hover_square == square:
             return
+
+        previous_hover = self.hover_square
         self.hover_square = square
-        self._update_board()
+
+        if previous_hover is not None:
+            self._render_square(previous_hover)
+        if square is not None:
+            self._render_square(square)
 
     def _update_info(self):
         """Update the information panel."""
