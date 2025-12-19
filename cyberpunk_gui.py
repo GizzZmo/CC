@@ -84,6 +84,7 @@ class CyberpunkChessGUI:
         self.legal_moves = []
         self.move_history = []
         self.last_move = None
+        self.hover_square = None
 
         # Game mode
         self.game_mode = None  # 'pvp', 'pvc', 'cvc', 'gvg', 'svg', None
@@ -235,6 +236,8 @@ class CyberpunkChessGUI:
                     command=lambda s=square: self._on_square_click(s),
                 )
                 btn.grid(row=row, column=col, padx=1, pady=1)
+                btn.bind("<Enter>", lambda _, s=square: self._set_hover_square(s))
+                btn.bind("<Leave>", lambda _: self._set_hover_square(None))
                 self.square_buttons[square] = btn
 
             # Right coordinates (8-1)
@@ -512,11 +515,24 @@ class CyberpunkChessGUI:
                     highlightbackground=self.COLORS["neon_green"],
                     highlightthickness=2,
                 )
+            elif square == self.hover_square:
+                btn.config(
+                    bg=default_bg,
+                    highlightbackground=self.COLORS["grid"],
+                    highlightthickness=1,
+                )
             else:
                 btn.config(bg=default_bg, highlightthickness=0)
 
         # Update info panel
         self._update_info()
+
+    def _set_hover_square(self, square: Optional[int]):
+        """Update the square currently under the cursor for hover styling."""
+        if self.hover_square == square:
+            return
+        self.hover_square = square
+        self._update_board()
 
     def _update_info(self):
         """Update the information panel."""
